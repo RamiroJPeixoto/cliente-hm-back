@@ -1,4 +1,4 @@
-package com.clientehm.model;
+package com.clientehm.entity;
 
 import jakarta.persistence.*;
 
@@ -13,18 +13,20 @@ public class Administrador {
     private String senha;
     private String palavraChave;
 
-    public Administrador() {}
+    public Administrador() {
+    }
 
     public Administrador(String nome, String email, String senha, String palavraChave) {
         this.nome = nome;
         this.email = email;
-        this.senha = senha;
+        this.senha = senha; // Lembre-se: idealmente, a senha deve ser codificada aqui antes de salvar
         this.palavraChave = palavraChave;
     }
 
+    // Este construtor pode ser útil ou pode ser removido se não for mais usado após a introdução dos DTOs.
     public Administrador(String email, String senha) {
         this.email = email;
-        this.senha = senha;
+        this.senha = senha; // Lembre-se: idealmente, a senha deve ser codificada aqui
     }
 
     public Long getId() {
@@ -56,7 +58,7 @@ public class Administrador {
     }
 
     public void setSenha(String senha) {
-        this.senha = senha;
+        this.senha = senha; // Lembre-se: idealmente, a senha deve ser codificada aqui se estiver sendo definida
     }
 
     public String getPalavraChave() {
