@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "administradores")
-public class Administrador {
+public class AdministradorEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -13,10 +13,10 @@ public class Administrador {
     private String senha; // Será armazenada codificada
     private String palavraChave;
 
-    public Administrador() {
+    public AdministradorEntity() {
     }
 
-    public Administrador(String nome, String email, String senha, String palavraChave) {
+    public AdministradorEntity(String nome, String email, String senha, String palavraChave) {
         this.nome = nome;
         this.email = email;
         this.senha = senha;

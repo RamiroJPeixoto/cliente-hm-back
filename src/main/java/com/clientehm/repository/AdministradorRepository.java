@@ -1,9 +1,9 @@
 package com.clientehm.repository;
 
-import com.clientehm.entity.Administrador; // Import da entidade no pacote correto
+import com.clientehm.entity.AdministradorEntity; // Import da entidade no pacote correto
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
-public interface AdministradorRepository extends JpaRepository<Administrador, Long> {
-    Optional<Administrador> findByEmail(String email);
+public interface AdministradorRepository extends JpaRepository<AdministradorEntity, Long> {
+    Optional<AdministradorEntity> findByEmail(String email);
 }

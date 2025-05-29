@@ -1,6 +1,6 @@
 package com.clientehm.service;
 
-import com.clientehm.entity.Administrador;
+import com.clientehm.entity.AdministradorEntity;
 import com.clientehm.model.AdministradorLoginDTO;
 import com.clientehm.model.AdministradorRegistroDTO;
 import com.clientehm.model.RedefinirSenhaDTO;
@@ -38,7 +38,7 @@ public class AdministradorService {
     }
 
     public Map<String, Object> login(AdministradorLoginDTO loginDTO) {
-        Administrador admin = administradorRepository.findByEmail(loginDTO.getEmail())
+        AdministradorEntity admin = administradorRepository.findByEmail(loginDTO.getEmail())
                 .orElseThrow(() -> new InvalidCredentialsException("Credenciais inválidas"));
 
         if (!passwordEncoder.matches(loginDTO.getSenha(), admin.getSenha())) {
@@ -54,7 +54,7 @@ public class AdministradorService {
         return response;
     }
 
-    public Administrador register(AdministradorRegistroDTO registroDTO) {
+    public AdministradorEntity register(AdministradorRegistroDTO registroDTO) {
         if (administradorRepository.findByEmail(registroDTO.getEmail()).isPresent()) {
             throw new EmailAlreadyExistsException("Email já cadastrado");
         }
@@ -63,7 +63,7 @@ public class AdministradorService {
         }
 
         String encodedPassword = passwordEncoder.encode(registroDTO.getSenha());
-        Administrador novoAdministrador = new Administrador(
+        AdministradorEntity novoAdministrador = new AdministradorEntity(
                 registroDTO.getNome(),
                 registroDTO.getEmail(),
                 encodedPassword,
@@ -73,14 +73,14 @@ public class AdministradorService {
     }
 
     public boolean verifyKeyword(VerificarPalavraChaveDTO verificarDTO) {
-        Administrador admin = administradorRepository.findByEmail(verificarDTO.getEmail())
+        AdministradorEntity admin = administradorRepository.findByEmail(verificarDTO.getEmail())
                 .orElseThrow(() -> new InvalidCredentialsException("Email ou palavra-chave incorretos"));
 
         return verificarDTO.getPalavraChave().trim().equalsIgnoreCase(admin.getPalavraChave().trim());
     }
 
-    public Administrador resetPassword(RedefinirSenhaDTO redefinirDTO) {
-        Administrador admin = administradorRepository.findByEmail(redefinirDTO.getEmail())
+    public AdministradorEntity resetPassword(RedefinirSenhaDTO redefinirDTO) {
+        AdministradorEntity admin = administradorRepository.findByEmail(redefinirDTO.getEmail())
                 .orElseThrow(() -> new AdminNotFoundException("Administrador não encontrado"));
 
         if (!isStrongPassword(redefinirDTO.getNovaSenha())) {
