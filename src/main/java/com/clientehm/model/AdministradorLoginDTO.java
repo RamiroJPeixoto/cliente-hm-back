@@ -1,7 +1,15 @@
 package com.clientehm.model;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+
 public class AdministradorLoginDTO {
+
+    @NotBlank(message = "Email não pode ser vazio")
+    @Email(message = "Formato de email inválido")
     private String email;
+
+    @NotBlank(message = "Senha não pode ser vazia")
     private String senha;
 
     // Getters e Setters

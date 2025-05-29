@@ -1,131 +1,133 @@
 package com.clientehm.controller;
 
-import com.clientehm.entity.Administrador; // Import da entidade no novo pacote
 import com.clientehm.model.AdministradorLoginDTO;
 import com.clientehm.model.AdministradorRegistroDTO;
 import com.clientehm.model.RedefinirSenhaDTO;
 import com.clientehm.model.VerificarPalavraChaveDTO;
-import com.clientehm.repository.AdministradorRepository;
-import com.clientehm.util.JwtUtil;
+import com.clientehm.service.AdministradorService; // Import para o serviço
+
+// IMPORTS ATUALIZADOS para as exceções do pacote com.clientehm.exception
+import com.clientehm.exception.AdminNotFoundException;
+import com.clientehm.exception.InvalidCredentialsException;
+import com.clientehm.exception.EmailAlreadyExistsException;
+import com.clientehm.exception.WeakPasswordException;
+
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
+// O import java.util.stream.Collectors não está sendo usado neste arquivo, pode ser removido se desejar.
 
 @RestController
 @RequestMapping("/api/administradores")
-@CrossOrigin(origins = "*") // Considere restringir para domínios específicos em produção
+// Você ajustou o CORS para localhost:8080, o que é bom para desenvolvimento se seu frontend estiver em outra porta
+// ou se você precisar permitir acesso de scripts/ferramentas rodando nessa origem.
+@CrossOrigin(origins = "http://localhost:8080")
 public class AdministradorController {
 
     @Autowired
-    private AdministradorRepository administradorRepository;
+    private AdministradorService administradorService;
 
-    private final JwtUtil jwtUtil;
-
-    @Autowired
-    public AdministradorController(JwtUtil jwtUtil) {
-        this.jwtUtil = jwtUtil;
+    // Método utilitário para criar respostas (renomeado para inglês)
+    private ResponseEntity<Map<String, Object>> createResponse(HttpStatus status, String message, Map<String, Object> additionalData) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("mensagem", message);
+        body.put("codigo", status.value());
+        if (additionalData != null) {
+            body.putAll(additionalData);
+        }
+        return ResponseEntity.status(status).body(body);
     }
 
-    private ResponseEntity<Map<String, Object>> criarResposta(int status, String mensagem) {
-        Map<String, Object> corpo = new HashMap<>();
-        corpo.put("mensagem", mensagem);
-        corpo.put("codigo", status);
-        return ResponseEntity.status(status).body(corpo);
+    private ResponseEntity<Map<String, Object>> createSuccessResponse(HttpStatus status, String message, Map<String, Object> additionalData) {
+        return createResponse(status, message, additionalData);
+    }
+
+    private ResponseEntity<Map<String, Object>> createErrorResponse(HttpStatus status, String message) {
+        return createResponse(status, message, null);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody AdministradorLoginDTO loginDTO) {
-        Optional<Administrador> administradorOpt = administradorRepository.findByEmail(loginDTO.getEmail());
-        if (administradorOpt.isPresent()) {
-            Administrador admin = administradorOpt.get();
-            // IMPORTANTE: Substitua esta comparação de senha em texto plano
-            // por uma verificação usando BCryptPasswordEncoder ou similar.
-            if (admin.getSenha().equals(loginDTO.getSenha())) {
-                String token = jwtUtil.gerarToken(admin.getEmail());
-                Map<String, Object> resposta = new HashMap<>();
-                resposta.put("mensagem", "Login realizado com sucesso");
-                resposta.put("token", token);
-                resposta.put("nome", admin.getNome());
-                resposta.put("email", admin.getEmail());
-                resposta.put("codigo", 200);
-                return ResponseEntity.ok(resposta);
-            }
-        }
-        return criarResposta(401, "Credenciais inválidas");
+    public ResponseEntity<?> login(@Valid @RequestBody AdministradorLoginDTO loginDTO) {
+        Map<String, Object> loginData = administradorService.login(loginDTO);
+        // Adiciona o código HTTP ao mapa retornado pelo serviço para a resposta final
+        return createSuccessResponse(HttpStatus.OK, (String) loginData.remove("mensagem"), loginData);
     }
 
     @PostMapping("/registrar")
-    public ResponseEntity<?> registrar(@RequestBody AdministradorRegistroDTO registroDTO) {
-        if (registroDTO.getNome() == null || registroDTO.getNome().length() < 3) {
-            return criarResposta(400, "Nome muito curto (mínimo 3 caracteres)");
-        }
-        if (registroDTO.getEmail() == null || !registroDTO.getEmail().matches("^[\\w.-]+@hm\\.com$")) {
-            return criarResposta(400, "Email deve ser do domínio @hm.com");
-        }
-        if (registroDTO.getSenha() == null || !isSenhaForte(registroDTO.getSenha())) {
-            return criarResposta(400, "Senha fraca! Use letras maiúsculas, minúsculas, número e símbolo.");
-        }
-        if (registroDTO.getPalavraChave() == null || registroDTO.getPalavraChave().length() < 4) {
-            return criarResposta(400, "Palavra-chave muito curta (mínimo 4 caracteres)");
-        }
-        if (administradorRepository.findByEmail(registroDTO.getEmail()).isPresent()) {
-            return criarResposta(400, "Email já cadastrado");
-        }
-
-        // IMPORTANTE: Codifique a senha ANTES de salvar usando BCryptPasswordEncoder ou similar.
-        // Exemplo: String senhaCodificada = passwordEncoder.encode(registroDTO.getSenha());
-        Administrador novoAdministrador = new Administrador(
-                registroDTO.getNome(),
-                registroDTO.getEmail(),
-                registroDTO.getSenha(), // Substitua pela senha codificada
-                registroDTO.getPalavraChave()
-        );
-        administradorRepository.save(novoAdministrador);
-        return criarResposta(201, "Administrador registrado com sucesso");
+    public ResponseEntity<?> registrar(@Valid @RequestBody AdministradorRegistroDTO registroDTO) {
+        administradorService.register(registroDTO);
+        return createSuccessResponse(HttpStatus.CREATED, "Administrador registrado com sucesso", null);
     }
 
     @PostMapping("/verificar-palavra-chave")
-    public ResponseEntity<?> verificarPalavraChave(@RequestBody VerificarPalavraChaveDTO verificarDTO) {
-        if (verificarDTO.getEmail() == null || verificarDTO.getPalavraChave() == null) {
-            return criarResposta(400, "Email e palavra-chave são obrigatórios");
+    public ResponseEntity<?> verificarPalavraChave(@Valid @RequestBody VerificarPalavraChaveDTO verificarDTO) {
+        boolean isCorrect = administradorService.verifyKeyword(verificarDTO);
+        if (isCorrect) {
+            return createSuccessResponse(HttpStatus.OK, "Palavra-chave correta", null);
+        } else {
+            // A exceção InvalidCredentialsException será lançada pelo serviço se o email não for encontrado ou a palavra-chave estiver incorreta (conforme lógica no service).
+            // O ExceptionHandler cuidará de retornar a resposta correta.
+            // Esta linha abaixo se torna desnecessária se o serviço já lança a exceção em ambos os casos de falha.
+            // return createErrorResponse(HttpStatus.UNAUTHORIZED, "Email ou palavra-chave incorretos");
+            // Se o serviço não lançar exceção para palavra-chave incorreta (apenas retornar false), então o else é necessário.
+            // Pela lógica atual do service, ele lança InvalidCredentialsException se o email não existe,
+            // e retorna true/false se o email existe. Então o else aqui ainda faz sentido.
+            return createErrorResponse(HttpStatus.UNAUTHORIZED, "Email ou palavra-chave incorretos");
         }
-        Optional<Administrador> administradorOpt = administradorRepository.findByEmail(verificarDTO.getEmail());
-        if (administradorOpt.isPresent()) {
-            Administrador admin = administradorOpt.get();
-            if (verificarDTO.getPalavraChave().trim().equalsIgnoreCase(admin.getPalavraChave().trim())) {
-                return criarResposta(200, "Palavra-chave correta");
-            }
-        }
-        return criarResposta(401, "Email ou palavra-chave incorretos");
     }
 
     @PutMapping("/redefinir-senha")
-    public ResponseEntity<?> redefinirSenha(@RequestBody RedefinirSenhaDTO redefinirDTO) {
-        if (redefinirDTO.getEmail() == null || redefinirDTO.getNovaSenha() == null) {
-            return criarResposta(400, "Email e nova senha são obrigatórios");
-        }
-        Optional<Administrador> administradorOpt = administradorRepository.findByEmail(redefinirDTO.getEmail());
-        if (administradorOpt.isPresent()) {
-            if (!isSenhaForte(redefinirDTO.getNovaSenha())) {
-                return criarResposta(400, "Senha fraca! Use letras maiúsculas, minúsculas, número e símbolo.");
-            }
-            Administrador admin = administradorOpt.get();
-            // IMPORTANTE: Codifique a nova senha ANTES de salvar.
-            // Exemplo: admin.setSenha(passwordEncoder.encode(redefinirDTO.getNovaSenha()));
-            admin.setSenha(redefinirDTO.getNovaSenha()); // Substitua pela senha codificada
-            administradorRepository.save(admin);
-            return criarResposta(200, "Senha alterada com sucesso");
-        }
-        return criarResposta(404, "Administrador não encontrado");
+    public ResponseEntity<?> redefinirSenha(@Valid @RequestBody RedefinirSenhaDTO redefinirDTO) {
+        administradorService.resetPassword(redefinirDTO);
+        return createSuccessResponse(HttpStatus.OK, "Senha alterada com sucesso", null);
     }
 
-    private boolean isSenhaForte(String senha) {
-        // Pelo menos 6 caracteres, 1 maiúscula, 1 minúscula, 1 número, 1 símbolo
-        String regex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&#])[A-Za-z\\d@$!%*?&#]{6,}$";
-        return senha.matches(regex);
+    // Manipulador de exceções para erros de validação do Bean Validation
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, Object>> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getFieldErrors().forEach(error ->
+                errors.put(error.getField(), error.getDefaultMessage()));
+
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("mensagem", "Erro de validação");
+        responseBody.put("codigo", HttpStatus.BAD_REQUEST.value());
+        responseBody.put("erros", errors);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseBody);
+    }
+
+    // Manipuladores para as exceções customizadas do serviço
+    @ExceptionHandler(AdminNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleAdminNotFound(AdminNotFoundException ex) {
+        return createErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
+
+    @ExceptionHandler(InvalidCredentialsException.class)
+    public ResponseEntity<Map<String, Object>> handleInvalidCredentials(InvalidCredentialsException ex) {
+        return createErrorResponse(HttpStatus.UNAUTHORIZED, ex.getMessage());
+    }
+
+    @ExceptionHandler(EmailAlreadyExistsException.class)
+    public ResponseEntity<Map<String, Object>> handleEmailExists(EmailAlreadyExistsException ex) {
+        return createErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
+    @ExceptionHandler(WeakPasswordException.class)
+    public ResponseEntity<Map<String, Object>> handleWeakPassword(WeakPasswordException ex) {
+        return createErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
+    // Um manipulador genérico para outras exceções não tratadas pode ser útil
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Map<String, Object>> handleGenericException(Exception ex) {
+        // É uma boa prática logar a exceção aqui para depuração
+        // ex: logger.error("Ocorreu um erro inesperado:", ex);
+        return createErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Ocorreu um erro inesperado.");
     }
 }

@@ -10,7 +10,7 @@ public class Administrador {
     private Long id;
     private String nome;
     private String email;
-    private String senha;
+    private String senha; // Será armazenada codificada
     private String palavraChave;
 
     public Administrador() {
@@ -19,16 +19,11 @@ public class Administrador {
     public Administrador(String nome, String email, String senha, String palavraChave) {
         this.nome = nome;
         this.email = email;
-        this.senha = senha; // Lembre-se: idealmente, a senha deve ser codificada aqui antes de salvar
+        this.senha = senha;
         this.palavraChave = palavraChave;
     }
 
-    // Este construtor pode ser útil ou pode ser removido se não for mais usado após a introdução dos DTOs.
-    public Administrador(String email, String senha) {
-        this.email = email;
-        this.senha = senha; // Lembre-se: idealmente, a senha deve ser codificada aqui
-    }
-
+    // Getters e Setters
     public Long getId() {
         return id;
     }
@@ -58,7 +53,7 @@ public class Administrador {
     }
 
     public void setSenha(String senha) {
-        this.senha = senha; // Lembre-se: idealmente, a senha deve ser codificada aqui se estiver sendo definida
+        this.senha = senha;
     }
 
     public String getPalavraChave() {
