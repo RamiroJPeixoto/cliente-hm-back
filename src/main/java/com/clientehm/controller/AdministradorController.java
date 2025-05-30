@@ -27,7 +27,6 @@ import java.util.Map;
 @RequestMapping("/api/administradores")
 // Você ajustou o CORS para localhost:8080, o que é bom para desenvolvimento se seu frontend estiver em outra porta
 // ou se você precisar permitir acesso de scripts/ferramentas rodando nessa origem.
-@CrossOrigin(origins = "http://localhost:8080")
 public class AdministradorController {
 
     @Autowired
@@ -71,14 +70,8 @@ public class AdministradorController {
         if (isCorrect) {
             return createSuccessResponse(HttpStatus.OK, "Palavra-chave correta", null);
         } else {
-            // A exceção InvalidCredentialsException será lançada pelo serviço se o email não for encontrado ou a palavra-chave estiver incorreta (conforme lógica no service).
-            // O ExceptionHandler cuidará de retornar a resposta correta.
-            // Esta linha abaixo se torna desnecessária se o serviço já lança a exceção em ambos os casos de falha.
-            // return createErrorResponse(HttpStatus.UNAUTHORIZED, "Email ou palavra-chave incorretos");
-            // Se o serviço não lançar exceção para palavra-chave incorreta (apenas retornar false), então o else é necessário.
-            // Pela lógica atual do service, ele lança InvalidCredentialsException se o email não existe,
-            // e retorna true/false se o email existe. Então o else aqui ainda faz sentido.
-            return createErrorResponse(HttpStatus.UNAUTHORIZED, "Email ou palavra-chave incorretos");
+            // Mude de HttpStatus.UNAUTHORIZED para HttpStatus.BAD_REQUEST
+            return createErrorResponse(HttpStatus.BAD_REQUEST, "Email ou palavra-chave incorretos.");
         }
     }
 
@@ -102,7 +95,6 @@ public class AdministradorController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseBody);
     }
 
-    // Manipuladores para as exceções customizadas do serviço
     @ExceptionHandler(AdminNotFoundException.class)
     public ResponseEntity<Map<String, Object>> handleAdminNotFound(AdminNotFoundException ex) {
         return createErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage());
@@ -110,7 +102,7 @@ public class AdministradorController {
 
     @ExceptionHandler(InvalidCredentialsException.class)
     public ResponseEntity<Map<String, Object>> handleInvalidCredentials(InvalidCredentialsException ex) {
-        return createErrorResponse(HttpStatus.UNAUTHORIZED, ex.getMessage());
+        return createErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
     @ExceptionHandler(EmailAlreadyExistsException.class)
