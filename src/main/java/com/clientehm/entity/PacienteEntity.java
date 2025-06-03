@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+// import com.clientehm.entity.Endereco; // REMOVA ESTA LINHA (se referir ao Embeddable antigo)
+import com.clientehm.entity.EnderecoEntity; // ADICIONE ESTA LINHA
 
 @Entity
 @Table(name = "pacientes")
@@ -60,6 +62,8 @@ public class PacienteEntity {
     @Column(columnDefinition = "TEXT")
     private String medicamentosContinuos;
 
+    // REMOVA O ANTIGO @Embedded Endereco
+    /*
     @Embedded
     @AttributeOverrides({
             @AttributeOverride(name="logradouro", column=@Column(name="endereco_logradouro")),
@@ -71,6 +75,12 @@ public class PacienteEntity {
             @AttributeOverride(name="cep", column=@Column(name="endereco_cep"))
     })
     private Endereco endereco;
+    */
+
+    // ADICIONE O NOVO RELACIONAMENTO @OneToOne com EnderecoEntity
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name = "endereco_id", referencedColumnName = "id") // Isso cria a chave estrangeira 'endereco_id' na tabela 'pacientes'
+    private EnderecoEntity endereco;
 
     @OneToMany(mappedBy = "paciente", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<ProntuarioEntity> prontuarios;
@@ -98,6 +108,7 @@ public class PacienteEntity {
     public enum RacaCor { BRANCA, PRETA, PARDA, AMARELA, INDIGENA, NAO_DECLARADO }
     public enum TipoSanguineo { A_POSITIVO, A_NEGATIVO, B_POSITIVO, B_NEGATIVO, AB_POSITIVO, AB_NEGATIVO, O_POSITIVO, O_NEGATIVO, NAO_SABE, NAO_INFORMADO }
 
+    // Getters e Setters para todos os campos, incluindo o novo EnderecoEntity
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getNome() { return nome; }
@@ -130,8 +141,11 @@ public class PacienteEntity {
     public void setNacionalidade(String nacionalidade) { this.nacionalidade = nacionalidade; }
     public String getOcupacao() { return ocupacao; }
     public void setOcupacao(String ocupacao) { this.ocupacao = ocupacao; }
-    public Endereco getEndereco() { return endereco; }
-    public void setEndereco(Endereco endereco) { this.endereco = endereco; }
+
+    // Getter e Setter ATUALIZADOS para EnderecoEntity
+    public EnderecoEntity getEndereco() { return endereco; }
+    public void setEndereco(EnderecoEntity endereco) { this.endereco = endereco; }
+
     public List<ProntuarioEntity> getProntuarios() { return prontuarios; }
     public void setProntuarios(List<ProntuarioEntity> prontuarios) { this.prontuarios = prontuarios; }
     public LocalDateTime getCreatedAt() { return createdAt; }
@@ -144,5 +158,4 @@ public class PacienteEntity {
     public void setComorbidadesDeclaradas(String comorbidadesDeclaradas) { this.comorbidadesDeclaradas = comorbidadesDeclaradas; }
     public String getMedicamentosContinuos() { return medicamentosContinuos; }
     public void setMedicamentosContinuos(String medicamentosContinuos) { this.medicamentosContinuos = medicamentosContinuos; }
-
 }
