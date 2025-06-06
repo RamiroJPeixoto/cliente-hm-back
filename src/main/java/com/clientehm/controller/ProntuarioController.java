@@ -2,11 +2,9 @@ package com.clientehm.controller;
 
 import com.clientehm.entity.AdministradorEntity;
 import com.clientehm.exception.ResourceNotFoundException;
-import com.clientehm.model.*; // Seus DTOs de request e response
+import com.clientehm.model.*;
 import com.clientehm.service.ProntuarioService;
 import jakarta.validation.Valid;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,8 +21,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/prontuarios")
 public class ProntuarioController {
-
-    private static final Logger logger = LoggerFactory.getLogger(ProntuarioController.class);
 
     @Autowired
     private ProntuarioService prontuarioService;
@@ -65,7 +61,7 @@ public class ProntuarioController {
             return ResponseEntity.status(HttpStatus.CREATED).body(consultaSalvaDTO);
         } catch (ResourceNotFoundException e) { return createErrorResponse(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (IllegalArgumentException e) { return createErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage());
-        } catch (Exception e) { logger.error("Erro inesperado ao adicionar consulta:", e); return createErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Erro interno ao adicionar consulta."); }
+        } catch (Exception e) { return createErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Erro interno ao adicionar consulta."); }
     }
 
     @PostMapping("/exames")
@@ -80,7 +76,7 @@ public class ProntuarioController {
             return ResponseEntity.status(HttpStatus.CREATED).body(exameSalvoDTO);
         } catch (ResourceNotFoundException e) { return createErrorResponse(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (IllegalArgumentException e) { return createErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage());
-        } catch (Exception e) { logger.error("Erro inesperado ao adicionar exame:", e); return createErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Erro interno ao adicionar exame.");}
+        } catch (Exception e) { return createErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Erro interno ao adicionar exame.");}
     }
 
     @PostMapping("/procedimentos")
@@ -94,7 +90,7 @@ public class ProntuarioController {
             return ResponseEntity.status(HttpStatus.CREATED).body(procedimentoSalvoDTO);
         } catch (ResourceNotFoundException e) { return createErrorResponse(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (IllegalArgumentException e) { return createErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage());
-        } catch (Exception e) { logger.error("Erro inesperado ao adicionar procedimento:", e); return createErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Erro interno ao adicionar procedimento.");}
+        } catch (Exception e) { return createErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Erro interno ao adicionar procedimento.");}
     }
 
     @PostMapping("/encaminhamentos")
@@ -108,7 +104,7 @@ public class ProntuarioController {
             return ResponseEntity.status(HttpStatus.CREATED).body(encaminhamentoSalvoDTO);
         } catch (ResourceNotFoundException e) { return createErrorResponse(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (IllegalArgumentException e) { return createErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage());
-        } catch (Exception e) { logger.error("Erro inesperado ao adicionar encaminhamento:", e); return createErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Erro interno ao adicionar encaminhamento.");}
+        } catch (Exception e) { return createErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Erro interno ao adicionar encaminhamento.");}
     }
 
     @PutMapping("/consultas/{consultaId}")
@@ -122,7 +118,7 @@ public class ProntuarioController {
             return ResponseEntity.ok(consultaAtualizadaDTO);
         } catch (ResourceNotFoundException e) { return createErrorResponse(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (IllegalArgumentException e) { return createErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage());
-        } catch (Exception e) { logger.error("Erro inesperado ao atualizar consulta {}: ", consultaId, e); return createErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Erro interno ao atualizar consulta.");}
+        } catch (Exception e) { return createErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Erro interno ao atualizar consulta.");}
     }
 
     @PutMapping("/exames/{exameId}")
@@ -136,7 +132,7 @@ public class ProntuarioController {
             return ResponseEntity.ok(exameAtualizadoDTO);
         } catch (ResourceNotFoundException e) { return createErrorResponse(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (IllegalArgumentException e) { return createErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage());
-        } catch (Exception e) { logger.error("Erro inesperado ao atualizar exame {}: ", exameId, e); return createErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Erro interno ao atualizar exame.");}
+        } catch (Exception e) { return createErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Erro interno ao atualizar exame.");}
     }
 
     @PutMapping("/procedimentos/{procedimentoId}")
@@ -150,7 +146,7 @@ public class ProntuarioController {
             return ResponseEntity.ok(procedimentoAtualizadoDTO);
         } catch (ResourceNotFoundException e) { return createErrorResponse(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (IllegalArgumentException e) { return createErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage());
-        } catch (Exception e) { logger.error("Erro inesperado ao atualizar procedimento {}: ", procedimentoId, e); return createErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Erro interno ao atualizar procedimento.");}
+        } catch (Exception e) { return createErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Erro interno ao atualizar procedimento.");}
     }
 
     @PutMapping("/encaminhamentos/{encaminhamentoId}")
@@ -164,7 +160,7 @@ public class ProntuarioController {
             return ResponseEntity.ok(encaminhamentoAtualizadoDTO);
         } catch (ResourceNotFoundException e) { return createErrorResponse(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (IllegalArgumentException e) { return createErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage());
-        } catch (Exception e) { logger.error("Erro inesperado ao atualizar encaminhamento {}: ", encaminhamentoId, e); return createErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Erro interno ao atualizar encaminhamento.");}
+        } catch (Exception e) { return createErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Erro interno ao atualizar encaminhamento.");}
     }
 
     @PutMapping("/{id}/dados-basicos")
@@ -178,7 +174,7 @@ public class ProntuarioController {
             return ResponseEntity.ok(prontuarioAtualizadoDTO);
         } catch (ResourceNotFoundException e) { return createErrorResponse(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (IllegalArgumentException e) { return createErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage());
-        } catch (Exception e) { logger.error("Erro inesperado ao atualizar dados básicos do prontuário {}: ", id, e); return createErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Erro interno ao atualizar dados básicos do prontuário.");}
+        } catch (Exception e) { return createErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Erro interno ao atualizar dados básicos do prontuário.");}
     }
 
     private ResponseEntity<Map<String, Object>> createErrorResponse(HttpStatus status, String message) {
@@ -193,7 +189,6 @@ public class ProntuarioController {
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getFieldErrors().forEach(error ->
                 errors.put(error.getField(), error.getDefaultMessage()));
-        logger.warn("Erro de validação nos dados da requisição: {}", errors);
         Map<String, Object> body = new HashMap<>();
         body.put("mensagem", "Erro de validação nos dados fornecidos");
         body.put("codigo", HttpStatus.BAD_REQUEST.value());
@@ -203,19 +198,16 @@ public class ProntuarioController {
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<Map<String, Object>> handleResourceNotFound(ResourceNotFoundException ex) {
-        logger.warn("ResourceNotFoundException: {}", ex.getMessage());
         return createErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Map<String, Object>> handleIllegalArgument(IllegalArgumentException ex) {
-        logger.warn("IllegalArgumentException: {}", ex.getMessage());
         return createErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleGenericException(Exception ex) {
-        logger.error("Exceção genérica não tratada no ProntuarioController:", ex);
         return createErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Ocorreu um erro inesperado no servidor.");
     }
 }

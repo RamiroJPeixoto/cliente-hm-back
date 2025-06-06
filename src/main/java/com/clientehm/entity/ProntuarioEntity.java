@@ -28,7 +28,7 @@ public class ProntuarioEntity {
     private PacienteEntity paciente;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "medico_responsavel_id")
+    @JoinColumn(name = "medico_responsavel_id", nullable = false)
     private MedicoEntity medicoResponsavel;
 
     @ManyToOne(fetch = FetchType.LAZY)
