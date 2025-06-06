@@ -31,8 +31,6 @@ public class PacienteController {
     @Autowired
     private PacienteService pacienteService;
 
-    // PacienteMapper não precisa ser injetado aqui se o serviço já retorna DTOs
-
     private ResponseEntity<Map<String, Object>> createErrorResponse(HttpStatus status, String message) {
         Map<String, Object> body = new HashMap<>();
         body.put("mensagem", message);
@@ -44,7 +42,7 @@ public class PacienteController {
         Map<String, Object> body = new HashMap<>();
         body.put("mensagem", message);
         body.put("codigo", status.value());
-        if (data != null) { // Adicionado para não incluir a chave "dados" se data for null
+        if (data != null) {
             body.put("dados", data);
         }
         return ResponseEntity.status(status).body(body);
@@ -54,7 +52,7 @@ public class PacienteController {
     public ResponseEntity<?> criarPaciente(@Valid @RequestBody PacienteCreateDTO pacienteCreateDTO) {
         logger.info("CONTROLLER: Recebida requisição POST para /api/pacientes");
         try {
-            PacienteDTO pacienteCriado = pacienteService.criarPaciente(pacienteCreateDTO); // Serviço retorna DTO
+            PacienteDTO pacienteCriado = pacienteService.criarPaciente(pacienteCreateDTO);
             return createSuccessResponse(pacienteCriado, "Paciente criado com sucesso.", HttpStatus.CREATED);
         } catch (CpfAlreadyExistsException | EmailAlreadyExistsException e) {
             logger.warn("CONTROLLER: Erro ao criar paciente: {}", e.getMessage());
@@ -63,7 +61,6 @@ public class PacienteController {
             logger.warn("CONTROLLER: Erro de argumento ao criar paciente: {}", e.getMessage());
             return createErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage());
         }
-        // Não é necessário um catch genérico aqui se os handlers de exceção globais do controller cuidarem disso
     }
 
     @GetMapping
@@ -119,14 +116,12 @@ public class PacienteController {
         logger.info("CONTROLLER: Recebida requisição DELETE para /api/pacientes/{}", id);
         try {
             pacienteService.deletarPaciente(id);
-            // Para NO_CONTENT, geralmente não se envia corpo, mas sua createSuccessResponse pode lidar com data=null
             return createSuccessResponse(null, "Paciente deletado com sucesso.", HttpStatus.NO_CONTENT);
         } catch (ResourceNotFoundException e) {
             return createErrorResponse(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
 
-    // Exception Handlers permanecem os mesmos
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidationExceptions(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();

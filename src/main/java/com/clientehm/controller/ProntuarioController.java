@@ -29,9 +29,6 @@ public class ProntuarioController {
     @Autowired
     private ProntuarioService prontuarioService;
 
-    // Os métodos conversores foram removidos daqui e agora estão nos Mappers,
-    // e o ProntuarioService já retorna DTOs.
-
     @GetMapping
     public ResponseEntity<Page<ProntuarioDTO>> buscarProntuariosPaginado(
             @RequestParam(defaultValue = "0") int pagina,
@@ -89,7 +86,7 @@ public class ProntuarioController {
     @PostMapping("/procedimentos")
     public ResponseEntity<?> adicionarProcedimento(
             @RequestParam Long pacienteId,
-            @Valid @RequestBody CriarProcedimentoRequestDTO procedimentoDTO, // medicoExecutorId está dentro do DTO
+            @Valid @RequestBody CriarProcedimentoRequestDTO procedimentoDTO,
             @AuthenticationPrincipal AdministradorEntity adminLogado) {
         if (adminLogado == null) return createErrorResponse(HttpStatus.UNAUTHORIZED, "Usuário não autenticado ou não autorizado.");
         try {
@@ -103,7 +100,7 @@ public class ProntuarioController {
     @PostMapping("/encaminhamentos")
     public ResponseEntity<?> adicionarEncaminhamento(
             @RequestParam Long pacienteId,
-            @Valid @RequestBody CriarEncaminhamentoRequestDTO encaminhamentoDTO, // medicoSolicitanteId está dentro do DTO
+            @Valid @RequestBody CriarEncaminhamentoRequestDTO encaminhamentoDTO,
             @AuthenticationPrincipal AdministradorEntity adminLogado) {
         if (adminLogado == null) return createErrorResponse(HttpStatus.UNAUTHORIZED, "Usuário não autenticado ou não autorizado.");
         try {
@@ -145,7 +142,7 @@ public class ProntuarioController {
     @PutMapping("/procedimentos/{procedimentoId}")
     public ResponseEntity<?> atualizarProcedimento(
             @PathVariable Long procedimentoId,
-            @Valid @RequestBody AtualizarProcedimentoRequestDTO procedimentoDTO, // medicoExecutorId está dentro do DTO
+            @Valid @RequestBody AtualizarProcedimentoRequestDTO procedimentoDTO,
             @AuthenticationPrincipal AdministradorEntity adminLogado) {
         if (adminLogado == null) return createErrorResponse(HttpStatus.UNAUTHORIZED, "Usuário não autenticado ou não autorizado.");
         try {
@@ -159,7 +156,7 @@ public class ProntuarioController {
     @PutMapping("/encaminhamentos/{encaminhamentoId}")
     public ResponseEntity<?> atualizarEncaminhamento(
             @PathVariable Long encaminhamentoId,
-            @Valid @RequestBody AtualizarEncaminhamentoRequestDTO encaminhamentoDTO, // medicoSolicitanteId está dentro do DTO
+            @Valid @RequestBody AtualizarEncaminhamentoRequestDTO encaminhamentoDTO,
             @AuthenticationPrincipal AdministradorEntity adminLogado) {
         if (adminLogado == null) return createErrorResponse(HttpStatus.UNAUTHORIZED, "Usuário não autenticado ou não autorizado.");
         try {
@@ -184,7 +181,6 @@ public class ProntuarioController {
         } catch (Exception e) { logger.error("Erro inesperado ao atualizar dados básicos do prontuário {}: ", id, e); return createErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Erro interno ao atualizar dados básicos do prontuário.");}
     }
 
-    // --- HANDLERS DE EXCEÇÃO E MÉTODO createErrorResponse ---
     private ResponseEntity<Map<String, Object>> createErrorResponse(HttpStatus status, String message) {
         Map<String, Object> body = new HashMap<>();
         body.put("mensagem", message);

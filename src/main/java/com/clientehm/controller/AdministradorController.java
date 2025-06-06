@@ -5,9 +5,9 @@ import com.clientehm.model.AdministradorRegistroDTO;
 import com.clientehm.model.RedefinirSenhaDTO;
 import com.clientehm.model.VerificarPalavraChaveDTO;
 import com.clientehm.model.VerifiedProfileUpdateRequestDTO;
-import com.clientehm.model.dto.AdministradorDadosDTO; // Importar DTO
+import com.clientehm.model.dto.AdministradorDadosDTO;
 import com.clientehm.service.AdministradorService;
-import com.clientehm.mapper.AdministradorMapper; // Importar Mapper
+import com.clientehm.mapper.AdministradorMapper;
 import com.clientehm.exception.AdminNotFoundException;
 import com.clientehm.exception.InvalidCredentialsException;
 import com.clientehm.exception.EmailAlreadyExistsException;
@@ -35,7 +35,7 @@ public class AdministradorController {
     private AdministradorService administradorService;
 
     @Autowired
-    private AdministradorMapper administradorMapper; // Injetar o Mapper
+    private AdministradorMapper administradorMapper;
 
     private ResponseEntity<Map<String, Object>> createResponse(HttpStatus status, String message, Map<String, Object> additionalData) {
         Map<String, Object> body = new HashMap<>();
@@ -64,9 +64,7 @@ public class AdministradorController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody AdministradorLoginDTO loginDTO) {
         logger.info("CONTROLLER: Recebida requisição POST para /login com email: {}", loginDTO.getEmail());
-        // O serviço já retorna o Map formatado pelo mapper
         Map<String, Object> loginData = administradorService.login(loginDTO);
-        // A mensagem já está incluída no loginData pelo mapper/serviço
         return ResponseEntity.status(HttpStatus.OK).body(loginData);
     }
 
@@ -80,14 +78,14 @@ public class AdministradorController {
     @PostMapping("/verificar-palavra-chave")
     public ResponseEntity<?> verificarPalavraChave(@Valid @RequestBody VerificarPalavraChaveDTO verificarDTO) {
         logger.info("CONTROLLER: Recebida requisição POST para /verificar-palavra-chave para o email: {}", verificarDTO.getEmail());
-        administradorService.verifyKeyword(verificarDTO); // Serviço retorna boolean, mas o controller já trata o sucesso
+        administradorService.verifyKeyword(verificarDTO);
         return createSuccessResponse(HttpStatus.OK, "Palavra-chave correta.", null);
     }
 
     @PutMapping("/redefinir-senha")
     public ResponseEntity<?> redefinirSenha(@Valid @RequestBody RedefinirSenhaDTO redefinirDTO) {
         logger.info("CONTROLLER: Recebida requisição PUT para /redefinir-senha para o email: {}", redefinirDTO.getEmail());
-        administradorService.resetPassword(redefinirDTO); // Serviço agora pode retornar DTO, mas o controller só precisa do sucesso
+        administradorService.resetPassword(redefinirDTO);
         return createSuccessResponse(HttpStatus.OK, "Senha alterada com sucesso.", null);
     }
 
@@ -99,11 +97,11 @@ public class AdministradorController {
             return createErrorResponse(HttpStatus.UNAUTHORIZED, "Nenhum administrador autenticado encontrado.");
         }
         logger.info("CONTROLLER /me: Administrador autenticado: {}", admin.getEmail());
-        AdministradorDadosDTO adminDataDTO = administradorMapper.toDadosDTO(admin); // Usar o mapper
+        AdministradorDadosDTO adminDataDTO = administradorMapper.toDadosDTO(admin);
 
         Map<String, Object> response = new HashMap<>();
         response.put("mensagem", "Dados do administrador recuperados com sucesso");
-        response.put("adminData", adminDataDTO); // Retornar o DTO padronizado
+        response.put("adminData", adminDataDTO);
         return ResponseEntity.ok(response);
     }
 
@@ -122,7 +120,6 @@ public class AdministradorController {
         return ResponseEntity.ok(response);
     }
 
-    // Exception Handlers permanecem os mesmos
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidationExceptions(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();

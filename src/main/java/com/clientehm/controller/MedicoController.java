@@ -32,8 +32,6 @@ public class MedicoController {
     @Autowired
     private MedicoService medicoService;
 
-    // O MedicoMapper não precisa ser injetado aqui se o serviço já retorna DTOs.
-
     private ResponseEntity<Map<String, Object>> createErrorResponse(HttpStatus status, String message) {
         Map<String, Object> body = new HashMap<>();
         body.put("mensagem", message);
@@ -68,7 +66,7 @@ public class MedicoController {
         Sort sortBy = Sort.by(direction, sortField);
         Pageable pageable = PageRequest.of(pagina, tamanho, sortBy);
 
-        Page<MedicoDTO> medicosPage; // Serviço já retorna Page<MedicoDTO>
+        Page<MedicoDTO> medicosPage;
 
         if (nome != null && !nome.isEmpty()) {
             medicosPage = medicoService.buscarMedicosPorNome(nome, pageable);
@@ -82,7 +80,7 @@ public class MedicoController {
                 medicosPage = medicoService.buscarMedicosPorStatus(statusEnum, pageable);
             } catch (IllegalArgumentException e) {
                 logger.warn("CONTROLLER: Status inválido fornecido: {}", status);
-                return ResponseEntity.badRequest().build(); // Ou um createErrorResponse mais elaborado
+                return ResponseEntity.badRequest().build();
             }
         } else {
             medicosPage = medicoService.buscarTodosMedicos(pageable);
@@ -100,14 +98,14 @@ public class MedicoController {
     @PutMapping("/{id}")
     public ResponseEntity<MedicoDTO> atualizarMedico(@PathVariable Long id, @Valid @RequestBody MedicoUpdateDTO medicoUpdateDTO) {
         logger.info("CONTROLLER: Recebida requisição PUT para /api/medicos/{}", id);
-        MedicoDTO medicoAtualizado = medicoService.atualizarMedico(id, medicoUpdateDTO); // Serviço já retorna DTO
+        MedicoDTO medicoAtualizado = medicoService.atualizarMedico(id, medicoUpdateDTO);
         return ResponseEntity.ok(medicoAtualizado);
     }
 
     @PatchMapping("/{id}/status")
     public ResponseEntity<MedicoDTO> atualizarStatusMedico(@PathVariable Long id, @Valid @RequestBody StatusUpdateDTO statusUpdateDTO) {
         logger.info("CONTROLLER: Recebida requisição PATCH para /api/medicos/{}/status", id);
-        MedicoDTO medicoAtualizado = medicoService.atualizarStatusMedico(id, statusUpdateDTO.getStatus()); // Serviço já retorna DTO
+        MedicoDTO medicoAtualizado = medicoService.atualizarStatusMedico(id, statusUpdateDTO.getStatus());
         return ResponseEntity.ok(medicoAtualizado);
     }
 
@@ -118,7 +116,6 @@ public class MedicoController {
         return ResponseEntity.noContent().build();
     }
 
-    // Exception Handlers permanecem os mesmos
     @ExceptionHandler(CrmAlreadyExistsException.class)
     public ResponseEntity<Map<String, Object>> handleCrmAlreadyExists(CrmAlreadyExistsException ex) {
         logger.warn("CrmAlreadyExistsException: {}", ex.getMessage());
@@ -138,7 +135,7 @@ public class MedicoController {
                 errors.put(error.getField(), error.getDefaultMessage()));
         logger.warn("Erro de validação nos dados da requisição: {}", errors);
         Map<String, Object> body = new HashMap<>();
-        body.put("mensagem", "Erro de validação nos dados fornecidos"); // Mensagem mais genérica e amigável
+        body.put("mensagem", "Erro de validação nos dados fornecidos");
         body.put("codigo", HttpStatus.BAD_REQUEST.value());
         body.put("erros", errors);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
