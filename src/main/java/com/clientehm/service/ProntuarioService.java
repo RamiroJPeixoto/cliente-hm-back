@@ -114,7 +114,8 @@ public class ProntuarioService {
         };
         Pageable pageableParaConsulta = pageable;
         if (pageable.getSort().isUnsorted()) {
-            pageableParaConsulta = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(Sort.Direction.DESC, "dataUltimaAtualizacao"));
+            // Usar updatedAt como campo de ordenação padrão
+            pageableParaConsulta = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(Sort.Direction.DESC, "updatedAt"));
         }
         Page<ProntuarioEntity> resultadoEntities = prontuarioRepository.findAll(spec, pageableParaConsulta);
         return prontuarioMapper.toBasicDTOPage(resultadoEntities);
@@ -174,10 +175,9 @@ public class ProntuarioService {
     }
 
     private void atualizarDataProntuario(ProntuarioEntity prontuario) {
-        if (prontuario != null) {
-            prontuario.setDataUltimaAtualizacao(LocalDateTime.now());
-            prontuarioRepository.saveAndFlush(prontuario);
-        }
+        // Removido: prontuario.setDataUltimaAtualizacao(LocalDateTime.now());
+        // A coluna updatedAt já é atualizada automaticamente pelo @UpdateTimestamp.
+        prontuarioRepository.saveAndFlush(prontuario);
     }
 
     @Transactional
@@ -293,7 +293,7 @@ public class ProntuarioService {
             medicoExecutor = medicoRepository.findById(dto.getMedicoExecutorId())
                     .orElseThrow(() -> new ResourceNotFoundException("Médico executor não encontrado: ID " + dto.getMedicoExecutorId()));
             if (medicoExecutor.getDeletedAt() != null) {
-                throw new IllegalArgumentException("Médico executor (" + medicoExecutor.getNomeCompleto() + ") não está ativo.");
+                throw new IllegalArgumentException("Médico (" + medicoExecutor.getNomeCompleto() + ") não está ativo.");
             }
         }
         consultaMapper.updateEntityFromDTO(dto, consultaExistente, medicoExecutor, adminLogado);
@@ -412,7 +412,7 @@ public class ProntuarioService {
         }
 
         if (modificado) {
-            prontuario.setDataUltimaAtualizacao(LocalDateTime.now());
+            // Não é necessário setar dataUltimaAtualizacao, updatedAt já faz isso.
             prontuarioRepository.save(prontuario);
         }
         return buscarProntuarioPorIdDetalhado(prontuario.getId());
