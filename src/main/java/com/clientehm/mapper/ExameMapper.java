@@ -22,6 +22,7 @@ public class ExameMapper {
         entity.setNome(dto.getNome());
         entity.setResultado(dto.getResultado());
         entity.setObservacoes(dto.getObservacoes());
+        entity.setDataExame(dto.getDataExame()); // Mapear o novo campo
         return entity;
     }
 
@@ -36,9 +37,9 @@ public class ExameMapper {
             dto.setMedicoResponsavelExameId(entity.getMedicoResponsavelExame().getId());
             dto.setMedicoResponsavelExameNome(entity.getMedicoResponsavelExame().getNomeCompleto());
         }
-        // dto.setNomeResponsavelDisplay(entity.getNomeResponsavelDisplay()); // Removido
         dto.setCreatedAt(entity.getCreatedAt());
         dto.setUpdatedAt(entity.getUpdatedAt());
+        dto.setDataExame(entity.getDataExame()); // Mapear o novo campo
         return dto;
     }
 
@@ -49,16 +50,14 @@ public class ExameMapper {
         if (dto.getObservacoes() != null) {
             entity.setObservacoes(StringUtils.hasText(dto.getObservacoes()) ? dto.getObservacoes().trim() : null);
         }
+        if (dto.getDataExame() != null) entity.setDataExame(dto.getDataExame()); // Atualizar o novo campo
 
         if (medicoResponsavel != null) {
             entity.setMedicoResponsavelExame(medicoResponsavel);
-            // entity.setNomeResponsavelDisplay(medicoResponsavel.getNomeCompleto()); // Removido
         } else if (adminLogado != null) {
             entity.setMedicoResponsavelExame(null);
-            // entity.setNomeResponsavelDisplay(adminLogado.getNome()); // Removido
         } else {
             entity.setMedicoResponsavelExame(null);
-            // entity.setNomeResponsavelDisplay(adminLogado != null ? adminLogado.getNome() : "Sistema"); // Removido
         }
     }
 }

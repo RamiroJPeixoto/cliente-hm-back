@@ -1,8 +1,12 @@
 package com.clientehm.model;
 
 import jakarta.validation.constraints.Size;
+import java.time.LocalDateTime; // Importação adicionada
 
 public class AtualizarEncaminhamentoRequestDTO {
+
+    // Novo campo
+    private LocalDateTime dataEncaminhamento;
 
     @Size(min = 3, max = 200, message = "Especialidade deve ter entre 3 e 200 caracteres")
     private String especialidadeDestino;
@@ -14,6 +18,9 @@ public class AtualizarEncaminhamentoRequestDTO {
 
     @Size(max = 2000, message = "Observações não podem exceder 2000 caracteres")
     private String observacoes;
+
+    public LocalDateTime getDataEncaminhamento() { return dataEncaminhamento; }
+    public void setDataEncaminhamento(LocalDateTime dataEncaminhamento) { this.dataEncaminhamento = dataEncaminhamento; }
 
     public String getEspecialidadeDestino() { return especialidadeDestino; }
     public void setEspecialidadeDestino(String especialidadeDestino) { this.especialidadeDestino = especialidadeDestino; }

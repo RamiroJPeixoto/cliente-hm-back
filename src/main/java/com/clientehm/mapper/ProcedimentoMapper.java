@@ -23,6 +23,7 @@ public class ProcedimentoMapper {
         ProcedimentoRegistroEntity entity = new ProcedimentoRegistroEntity();
         entity.setDescricaoProcedimento(createDTO.getDescricaoProcedimento());
         entity.setRelatorioProcedimento(createDTO.getRelatorioProcedimento());
+        entity.setDataProcedimento(createDTO.getDataProcedimento()); // Mapear o novo campo
         return entity;
     }
 
@@ -39,9 +40,9 @@ public class ProcedimentoMapper {
             dto.setMedicoExecutorId(entity.getMedicoExecutor().getId());
             dto.setMedicoExecutorNome(entity.getMedicoExecutor().getNomeCompleto());
         }
-        // dto.setNomeResponsavelDisplay(entity.getNomeResponsavelDisplay()); // Removido
         dto.setCreatedAt(entity.getCreatedAt());
         dto.setUpdatedAt(entity.getUpdatedAt());
+        dto.setDataProcedimento(entity.getDataProcedimento()); // Mapear o novo campo
         return dto;
     }
 
@@ -56,10 +57,12 @@ public class ProcedimentoMapper {
         if (updateDTO.getRelatorioProcedimento() != null) {
             entity.setRelatorioProcedimento(StringUtils.hasText(updateDTO.getRelatorioProcedimento()) ? updateDTO.getRelatorioProcedimento().trim() : null);
         }
+        if (updateDTO.getDataProcedimento() != null) {
+            entity.setDataProcedimento(updateDTO.getDataProcedimento()); // Atualizar o novo campo
+        }
 
         if (medicoExecutor != null) {
             entity.setMedicoExecutor(medicoExecutor);
-            // entity.setNomeResponsavelDisplay(medicoExecutor.getNomeCompleto()); // Removido
         } else {
             // Lógica para lidar se medicoExecutor for nulo
         }

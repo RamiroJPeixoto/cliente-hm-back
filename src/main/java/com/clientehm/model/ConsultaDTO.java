@@ -7,7 +7,7 @@ public class ConsultaDTO {
     private String motivoConsulta;
     private String queixasPrincipais;
 
-    private SinaisVitaisDTO sinaisVitais; // Novo campo para os sinais vitais
+    private SinaisVitaisDTO sinaisVitais;
 
     private String exameFisico;
     private String hipoteseDiagnostica;
@@ -19,7 +19,10 @@ public class ConsultaDTO {
     private String responsavelNomeCompleto;
     private String responsavelEspecialidade;
     private String responsavelCRM;
-    // private String nomeResponsavelDisplay; // Removido
+
+    // Novo campo
+    private LocalDateTime dataConsulta;
+
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -58,8 +61,10 @@ public class ConsultaDTO {
     public void setResponsavelEspecialidade(String responsavelEspecialidade) { this.responsavelEspecialidade = responsavelEspecialidade; }
     public String getResponsavelCRM() { return responsavelCRM; }
     public void setResponsavelCRM(String responsavelCRM) { this.responsavelCRM = responsavelCRM; }
-    // public String getNomeResponsavelDisplay() { return nomeResponsavelDisplay; } // Removido
-    // public void setNomeResponsavelDisplay(String nomeResponsavelDisplay) { this.nomeResponsavelDisplay = nomeResponsavelDisplay; } // Removido
+
+    public LocalDateTime getDataConsulta() { return dataConsulta; }
+    public void setDataConsulta(LocalDateTime dataConsulta) { this.dataConsulta = dataConsulta; }
+
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }

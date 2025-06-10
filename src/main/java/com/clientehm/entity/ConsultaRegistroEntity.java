@@ -44,12 +44,13 @@ public class ConsultaRegistroEntity {
     @JoinColumn(name = "responsavel_medico_id")
     private MedicoEntity responsavelMedico;
 
-    // @Column(nullable = false) // Removido
-    // private String nomeResponsavelDisplay; // Removido
-
     @OneToOne(mappedBy = "consulta", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @PrimaryKeyJoinColumn
     private SinaisVitaisEntity sinaisVitais;
+
+    // Novo campo para a data/hora da consulta
+    @Column(nullable = false, name = "data_consulta")
+    private LocalDateTime dataConsulta;
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -63,6 +64,9 @@ public class ConsultaRegistroEntity {
     @PrePersist
     protected void onCreate() {
         createdAt = updatedAt = LocalDateTime.now();
+        if (dataConsulta == null) { // Define dataConsulta se não for explicitamente definida
+            dataConsulta = LocalDateTime.now();
+        }
     }
 
     @PreUpdate
@@ -92,8 +96,6 @@ public class ConsultaRegistroEntity {
     public void setResponsavelAdmin(AdministradorEntity responsavelAdmin) { this.responsavelAdmin = responsavelAdmin; }
     public MedicoEntity getResponsavelMedico() { return responsavelMedico; }
     public void setResponsavelMedico(MedicoEntity responsavelMedico) { this.responsavelMedico = responsavelMedico; }
-    // public String getNomeResponsavelDisplay() { return nomeResponsavelDisplay; } // Removido
-    // public void setNomeResponsavelDisplay(String nomeResponsavelDisplay) { this.nomeResponsavelDisplay = nomeResponsavelDisplay; } // Removido
     public SinaisVitaisEntity getSinaisVitais() {
         return sinaisVitais;
     }
@@ -104,6 +106,9 @@ public class ConsultaRegistroEntity {
         }
         this.sinaisVitais = sinaisVitais;
     }
+
+    public LocalDateTime getDataConsulta() { return dataConsulta; }
+    public void setDataConsulta(LocalDateTime dataConsulta) { this.dataConsulta = dataConsulta; }
 
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }

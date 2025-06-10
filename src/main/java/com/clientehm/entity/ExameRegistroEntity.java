@@ -28,8 +28,9 @@ public class ExameRegistroEntity {
     @JoinColumn(name = "medico_responsavel_exame_id")
     private MedicoEntity medicoResponsavelExame;
 
-    // @Column(nullable = false) // Removido
-    // private String nomeResponsavelDisplay; // Removido
+    // Novo campo para a data/hora do exame
+    @Column(nullable = false, name = "data_exame")
+    private LocalDateTime dataExame;
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -43,6 +44,9 @@ public class ExameRegistroEntity {
     @PrePersist
     protected void onCreate() {
         createdAt = updatedAt = LocalDateTime.now();
+        if (dataExame == null) { // Define dataExame se não for explicitamente definida
+            dataExame = LocalDateTime.now();
+        }
     }
 
     @PreUpdate
@@ -62,8 +66,8 @@ public class ExameRegistroEntity {
     public void setObservacoes(String observacoes) { this.observacoes = observacoes; }
     public MedicoEntity getMedicoResponsavelExame() { return medicoResponsavelExame; }
     public void setMedicoResponsavelExame(MedicoEntity medicoResponsavelExame) { this.medicoResponsavelExame = medicoResponsavelExame; }
-    // public String getNomeResponsavelDisplay() { return nomeResponsavelDisplay; } // Removido
-    // public void setNomeResponsavelDisplay(String nomeResponsavelDisplay) { this.nomeResponsavelDisplay = nomeResponsavelDisplay; } // Removido
+    public LocalDateTime getDataExame() { return dataExame; }
+    public void setDataExame(LocalDateTime dataExame) { this.dataExame = dataExame; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }

@@ -3,9 +3,12 @@ package com.clientehm.model;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import java.time.LocalDateTime; // Importação adicionada
 
 public class CriarConsultaRequestDTO {
 
+    // Novo campo
+    private LocalDateTime dataConsulta;
 
     @NotBlank(message = "Motivo da consulta é obrigatório")
     @Size(min = 3, max = 500, message = "Motivo da consulta deve ter entre 3 e 500 caracteres")
@@ -32,6 +35,9 @@ public class CriarConsultaRequestDTO {
 
     @Size(max = 5000, message = "Observações da consulta não podem exceder 5000 caracteres")
     private String observacoesConsulta;
+
+    public LocalDateTime getDataConsulta() { return dataConsulta; }
+    public void setDataConsulta(LocalDateTime dataConsulta) { this.dataConsulta = dataConsulta; }
 
     public String getMotivoConsulta() { return motivoConsulta; }
     public void setMotivoConsulta(String motivoConsulta) { this.motivoConsulta = motivoConsulta; }

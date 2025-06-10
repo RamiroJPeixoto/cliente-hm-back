@@ -28,8 +28,9 @@ public class EncaminhamentoRegistroEntity {
     @Column(columnDefinition = "TEXT")
     private String observacoes;
 
-    // @Column(nullable = false) // Removido
-    // private String nomeResponsavelDisplay; // Removido
+    // Novo campo para a data/hora do encaminhamento
+    @Column(nullable = false, name = "data_encaminhamento")
+    private LocalDateTime dataEncaminhamento;
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -43,6 +44,9 @@ public class EncaminhamentoRegistroEntity {
     @PrePersist
     protected void onCreate() {
         createdAt = updatedAt = LocalDateTime.now();
+        if (dataEncaminhamento == null) { // Define dataEncaminhamento se não for explicitamente definida
+            dataEncaminhamento = LocalDateTime.now();
+        }
     }
 
     @PreUpdate
@@ -62,8 +66,8 @@ public class EncaminhamentoRegistroEntity {
     public void setMedicoSolicitante(MedicoEntity medicoSolicitante) { this.medicoSolicitante = medicoSolicitante; }
     public String getObservacoes() { return observacoes; }
     public void setObservacoes(String observacoes) { this.observacoes = observacoes; }
-    // public String getNomeResponsavelDisplay() { return nomeResponsavelDisplay; } // Removido
-    // public void setNomeResponsavelDisplay(String nomeResponsavelDisplay) { this.nomeResponsavelDisplay = nomeResponsavelDisplay; } // Removido
+    public LocalDateTime getDataEncaminhamento() { return dataEncaminhamento; }
+    public void setDataEncaminhamento(LocalDateTime dataEncaminhamento) { this.dataEncaminhamento = dataEncaminhamento; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }

@@ -49,24 +49,32 @@ public class ProntuarioService {
             if (consulta.getResponsavelMedico() != null) consulta.getResponsavelMedico().getId();
             if (consulta.getResponsavelAdmin() != null) consulta.getResponsavelAdmin().getId();
             if (consulta.getSinaisVitais() != null) consulta.getSinaisVitais().getId();
+            // Adicionar dataConsulta para inicialização, se necessário
+            if (consulta.getDataConsulta() != null) consulta.getDataConsulta();
         }
     }
     private void inicializarExameCompletamente(ExameRegistroEntity exame) {
         if (exame != null) {
             if (exame.getProntuario() != null) exame.getProntuario().getId();
             if (exame.getMedicoResponsavelExame() != null) exame.getMedicoResponsavelExame().getId();
+            // Adicionar dataExame para inicialização, se necessário
+            if (exame.getDataExame() != null) exame.getDataExame();
         }
     }
     private void inicializarProcedimentoCompletamente(ProcedimentoRegistroEntity procedimento) {
         if (procedimento != null) {
             if (procedimento.getProntuario() != null) procedimento.getProntuario().getId();
             if (procedimento.getMedicoExecutor() != null) procedimento.getMedicoExecutor().getId();
+            // Adicionar dataProcedimento para inicialização, se necessário
+            if (procedimento.getDataProcedimento() != null) procedimento.getDataProcedimento();
         }
     }
     private void inicializarEncaminhamentoCompletamente(EncaminhamentoRegistroEntity encaminhamento) {
         if (encaminhamento != null) {
             if (encaminhamento.getProntuario() != null) encaminhamento.getProntuario().getId();
             if (encaminhamento.getMedicoSolicitante() != null) encaminhamento.getMedicoSolicitante().getId();
+            // Adicionar dataEncaminhamento para inicialização, se necessário
+            if (encaminhamento.getDataEncaminhamento() != null) encaminhamento.getDataEncaminhamento();
         }
     }
     private void inicializarPacienteCompleto(PacienteEntity paciente) {
@@ -135,7 +143,7 @@ public class ProntuarioService {
 
         MedicoEntity medicoRef = medicoRepository.findById(medicoIdReferencia)
                 .orElseThrow(() -> new ResourceNotFoundException("Médico de referência (ID: " + medicoIdReferencia + ") não encontrado."));
-        if (medicoRef.getDeletedAt() != null) { // Atualizado de getExcludedAt
+        if (medicoRef.getDeletedAt() != null) {
             throw new IllegalArgumentException("Médico ("+ medicoRef.getNomeCompleto() +") de referência para o prontuário não está ativo.");
         }
 
@@ -176,7 +184,7 @@ public class ProntuarioService {
     public ConsultaDTO adicionarConsultaERetornarDTO(Long pacienteId, CriarConsultaRequestDTO dto, AdministradorEntity adminLogado, Long medicoExecutorId) {
         MedicoEntity medicoExecutor = medicoRepository.findById(medicoExecutorId)
                 .orElseThrow(() -> new ResourceNotFoundException("Médico executor da consulta (ID: " + medicoExecutorId + ") não encontrado."));
-        if (medicoExecutor.getDeletedAt() != null) { // Atualizado de getExcludedAt
+        if (medicoExecutor.getDeletedAt() != null) {
             throw new IllegalArgumentException("Médico ("+ medicoExecutor.getNomeCompleto() +") não está ativo.");
         }
         ProntuarioEntity prontuario = findOrCreateProntuario(pacienteId, medicoExecutorId, adminLogado);
@@ -184,7 +192,10 @@ public class ProntuarioService {
         ConsultaRegistroEntity novaConsulta = consultaMapper.toEntity(dto);
         novaConsulta.setProntuario(prontuario);
         novaConsulta.setResponsavelMedico(medicoExecutor);
-        // novaConsulta.setNomeResponsavelDisplay(medicoExecutor.getNomeCompleto()); // Removido
+        // Garante que a data da consulta é definida, se não foi fornecida no DTO, usa a data atual
+        if (novaConsulta.getDataConsulta() == null) {
+            novaConsulta.setDataConsulta(LocalDateTime.now());
+        }
 
         if (dto.getSinaisVitais() != null) {
             SinaisVitaisEntity sinaisVitais = new SinaisVitaisEntity();
@@ -210,7 +221,7 @@ public class ProntuarioService {
     public ExameRegistroDTO adicionarExameERetornarDTO(Long pacienteId, CriarExameRequestDTO dto, AdministradorEntity adminLogado, Long medicoResponsavelExameId) {
         MedicoEntity medicoExame = medicoRepository.findById(medicoResponsavelExameId)
                 .orElseThrow(() -> new ResourceNotFoundException("Médico responsável pelo exame (ID: " + medicoResponsavelExameId + ") não encontrado."));
-        if (medicoExame.getDeletedAt() != null) { // Atualizado de getExcludedAt
+        if (medicoExame.getDeletedAt() != null) {
             throw new IllegalArgumentException("Médico responsável pelo exame ("+ medicoExame.getNomeCompleto() +") não está ativo.");
         }
         ProntuarioEntity prontuario = findOrCreateProntuario(pacienteId, medicoResponsavelExameId, adminLogado);
@@ -218,7 +229,10 @@ public class ProntuarioService {
         ExameRegistroEntity novoExame = exameMapper.toEntity(dto);
         novoExame.setProntuario(prontuario);
         novoExame.setMedicoResponsavelExame(medicoExame);
-        // novoExame.setNomeResponsavelDisplay(medicoExame.getNomeCompleto()); // Removido
+        // Garante que a data do exame é definida, se não foi fornecida no DTO, usa a data atual
+        if (novoExame.getDataExame() == null) {
+            novoExame.setDataExame(LocalDateTime.now());
+        }
 
         ExameRegistroEntity exameSalvo = exameRepository.save(novoExame);
         atualizarDataProntuario(prontuario);
@@ -229,7 +243,7 @@ public class ProntuarioService {
     public ProcedimentoRegistroDTO adicionarProcedimentoERetornarDTO(Long pacienteId, CriarProcedimentoRequestDTO dto, AdministradorEntity adminLogado) {
         MedicoEntity medicoExecutor = medicoRepository.findById(dto.getMedicoExecutorId())
                 .orElseThrow(() -> new ResourceNotFoundException("Médico executor do procedimento (ID: " + dto.getMedicoExecutorId() + ") não encontrado."));
-        if (medicoExecutor.getDeletedAt() != null) { // Atualizado de getExcludedAt
+        if (medicoExecutor.getDeletedAt() != null) {
             throw new IllegalArgumentException("Médico executor ("+ medicoExecutor.getNomeCompleto() +") não está ativo.");
         }
         ProntuarioEntity prontuario = findOrCreateProntuario(pacienteId, medicoExecutor.getId(), adminLogado);
@@ -237,7 +251,10 @@ public class ProntuarioService {
         ProcedimentoRegistroEntity novoProcedimento = procedimentoMapper.toEntity(dto);
         novoProcedimento.setProntuario(prontuario);
         novoProcedimento.setMedicoExecutor(medicoExecutor);
-        // novoProcedimento.setNomeResponsavelDisplay(medicoExecutor.getNomeCompleto()); // Removido
+        // Garante que a data do procedimento é definida, se não foi fornecida no DTO, usa a data atual
+        if (novoProcedimento.getDataProcedimento() == null) {
+            novoProcedimento.setDataProcedimento(LocalDateTime.now());
+        }
 
         ProcedimentoRegistroEntity procedimentoSalvo = procedimentoRepository.save(novoProcedimento);
         atualizarDataProntuario(prontuario);
@@ -248,7 +265,7 @@ public class ProntuarioService {
     public EncaminhamentoRegistroDTO adicionarEncaminhamentoERetornarDTO(Long pacienteId, CriarEncaminhamentoRequestDTO dto, AdministradorEntity adminLogado) {
         MedicoEntity medicoSolicitante = medicoRepository.findById(dto.getMedicoSolicitanteId())
                 .orElseThrow(() -> new ResourceNotFoundException("Médico solicitante do encaminhamento (ID: " + dto.getMedicoSolicitanteId() + ") não encontrado."));
-        if (medicoSolicitante.getDeletedAt() != null) { // Atualizado de getExcludedAt
+        if (medicoSolicitante.getDeletedAt() != null) {
             throw new IllegalArgumentException("Médico solicitante ("+ medicoSolicitante.getNomeCompleto() +") não está ativo.");
         }
         ProntuarioEntity prontuario = findOrCreateProntuario(pacienteId, medicoSolicitante.getId(), adminLogado);
@@ -256,7 +273,10 @@ public class ProntuarioService {
         EncaminhamentoRegistroEntity novoEncaminhamento = encaminhamentoMapper.toEntity(dto);
         novoEncaminhamento.setProntuario(prontuario);
         novoEncaminhamento.setMedicoSolicitante(medicoSolicitante);
-        // novoEncaminhamento.setNomeResponsavelDisplay(medicoSolicitante.getNomeCompleto()); // Removido
+        // Garante que a data do encaminhamento é definida, se não foi fornecida no DTO, usa a data atual
+        if (novoEncaminhamento.getDataEncaminhamento() == null) {
+            novoEncaminhamento.setDataEncaminhamento(LocalDateTime.now());
+        }
 
         EncaminhamentoRegistroEntity encaminhamentoSalvo = encaminhamentoRepository.save(novoEncaminhamento);
         atualizarDataProntuario(prontuario);
@@ -272,7 +292,7 @@ public class ProntuarioService {
         if (dto.getMedicoExecutorId() != null) {
             medicoExecutor = medicoRepository.findById(dto.getMedicoExecutorId())
                     .orElseThrow(() -> new ResourceNotFoundException("Médico executor não encontrado: ID " + dto.getMedicoExecutorId()));
-            if (medicoExecutor.getDeletedAt() != null) { // Atualizado de getExcludedAt
+            if (medicoExecutor.getDeletedAt() != null) {
                 throw new IllegalArgumentException("Médico executor (" + medicoExecutor.getNomeCompleto() + ") não está ativo.");
             }
         }
@@ -313,7 +333,7 @@ public class ProntuarioService {
         if (dto.getMedicoResponsavelExameId() != null) {
             medicoResponsavelExame = medicoRepository.findById(dto.getMedicoResponsavelExameId())
                     .orElseThrow(() -> new ResourceNotFoundException("Médico responsável pelo exame não encontrado: ID " + dto.getMedicoResponsavelExameId()));
-            if (medicoResponsavelExame.getDeletedAt() != null) { // Atualizado de getExcludedAt
+            if (medicoResponsavelExame.getDeletedAt() != null) {
                 throw new IllegalArgumentException("Médico responsável (" + medicoResponsavelExame.getNomeCompleto() + ") não está ativo.");
             }
         }
@@ -333,7 +353,7 @@ public class ProntuarioService {
         if (dto.getMedicoExecutorId() != null) {
             medicoExecutor = medicoRepository.findById(dto.getMedicoExecutorId())
                     .orElseThrow(() -> new ResourceNotFoundException("Médico executor não encontrado: ID " + dto.getMedicoExecutorId()));
-            if (medicoExecutor.getDeletedAt() != null) { // Atualizado de getExcludedAt
+            if (medicoExecutor.getDeletedAt() != null) {
                 throw new IllegalArgumentException("Médico executor (" + medicoExecutor.getNomeCompleto() + ") não está ativo.");
             }
         } else {
@@ -356,7 +376,7 @@ public class ProntuarioService {
         if (dto.getMedicoSolicitanteId() != null) {
             medicoSolicitante = medicoRepository.findById(dto.getMedicoSolicitanteId())
                     .orElseThrow(() -> new ResourceNotFoundException("Médico solicitante não encontrado: ID " + dto.getMedicoSolicitanteId()));
-            if (medicoSolicitante.getDeletedAt() != null) { // Atualizado de getExcludedAt
+            if (medicoSolicitante.getDeletedAt() != null) {
                 throw new IllegalArgumentException("Médico solicitante (" + medicoSolicitante.getNomeCompleto() + ") não está ativo.");
             }
         } else {
@@ -381,7 +401,7 @@ public class ProntuarioService {
 
         MedicoEntity medicoNovo = medicoRepository.findById(medicoResponsavelIdNovo)
                 .orElseThrow(() -> new ResourceNotFoundException("Novo médico responsável não encontrado com ID: " + medicoResponsavelIdNovo));
-        if (medicoNovo.getDeletedAt() != null) { // Atualizado de getExcludedAt
+        if (medicoNovo.getDeletedAt() != null) {
             throw new IllegalArgumentException("Novo médico responsável selecionado ("+ medicoNovo.getNomeCompleto() +") não está ativo.");
         }
 

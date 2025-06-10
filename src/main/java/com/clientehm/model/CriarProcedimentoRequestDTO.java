@@ -3,8 +3,12 @@ package com.clientehm.model;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import java.time.LocalDateTime; // Importação adicionada
 
 public class CriarProcedimentoRequestDTO {
+
+    // Novo campo
+    private LocalDateTime dataProcedimento;
 
     @NotBlank(message = "Descrição do procedimento é obrigatória")
     @Size(min = 10, max = 1000, message = "Descrição deve ter entre 10 e 1000 caracteres")
@@ -15,6 +19,9 @@ public class CriarProcedimentoRequestDTO {
 
     @NotNull(message = "ID do médico executor é obrigatório")
     private Long medicoExecutorId;
+
+    public LocalDateTime getDataProcedimento() { return dataProcedimento; }
+    public void setDataProcedimento(LocalDateTime dataProcedimento) { this.dataProcedimento = dataProcedimento; }
 
     public String getDescricaoProcedimento() { return descricaoProcedimento; }
     public void setDescricaoProcedimento(String descricaoProcedimento) { this.descricaoProcedimento = descricaoProcedimento; }

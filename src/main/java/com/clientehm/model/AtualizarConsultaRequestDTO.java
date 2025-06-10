@@ -2,8 +2,12 @@ package com.clientehm.model;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Size;
+import java.time.LocalDateTime; // Importação adicionada
 
 public class AtualizarConsultaRequestDTO {
+
+    // Novo campo
+    private LocalDateTime dataConsulta;
 
     @Size(min = 3, max = 500, message = "Motivo da consulta deve ter entre 3 e 500 caracteres")
     private String motivoConsulta;
@@ -12,7 +16,7 @@ public class AtualizarConsultaRequestDTO {
     private String queixasPrincipais;
 
     @Valid
-    private SinaisVitaisDTO sinaisVitais; // Novo campo
+    private SinaisVitaisDTO sinaisVitais;
 
     @Size(max = 5000, message = "Exame físico não pode exceder 5000 caracteres")
     private String exameFisico;
@@ -30,6 +34,9 @@ public class AtualizarConsultaRequestDTO {
     private String observacoesConsulta;
 
     private Long medicoExecutorId;
+
+    public LocalDateTime getDataConsulta() { return dataConsulta; }
+    public void setDataConsulta(LocalDateTime dataConsulta) { this.dataConsulta = dataConsulta; }
 
     public String getMotivoConsulta() { return motivoConsulta; }
     public void setMotivoConsulta(String motivoConsulta) { this.motivoConsulta = motivoConsulta; }

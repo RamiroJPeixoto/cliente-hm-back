@@ -10,9 +10,12 @@ public class EncaminhamentoRegistroDTO {
     private Long medicoSolicitanteId;
     private String medicoSolicitanteNome;
     private String medicoSolicitanteCRM;
-    private String medicoSolicitanteEspecialidade; // Adicionado especialidade
+    private String medicoSolicitanteEspecialidade;
     private String observacoes;
-    // private String nomeResponsavelDisplay; // Removido
+
+    // Novo campo
+    private LocalDateTime dataEncaminhamento;
+
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -30,12 +33,14 @@ public class EncaminhamentoRegistroDTO {
     public void setMedicoSolicitanteNome(String medicoSolicitanteNome) { this.medicoSolicitanteNome = medicoSolicitanteNome; }
     public String getMedicoSolicitanteCRM() { return medicoSolicitanteCRM; }
     public void setMedicoSolicitanteCRM(String medicoSolicitanteCRM) { this.medicoSolicitanteCRM = medicoSolicitanteCRM; }
-    public String getMedicoSolicitanteEspecialidade() { return medicoSolicitanteEspecialidade; } // Getter para especialidade
-    public void setMedicoSolicitanteEspecialidade(String medicoSolicitanteEspecialidade) { this.medicoSolicitanteEspecialidade = medicoSolicitanteEspecialidade; } // Setter para especialidade
+    public String getMedicoSolicitanteEspecialidade() { return medicoSolicitanteEspecialidade; }
+    public void setMedicoSolicitanteEspecialidade(String medicoSolicitanteEspecialidade) { this.medicoSolicitanteEspecialidade = medicoSolicitanteEspecialidade; }
     public String getObservacoes() { return observacoes; }
     public void setObservacoes(String observacoes) { this.observacoes = observacoes; }
-    // public String getNomeResponsavelDisplay() { return nomeResponsavelDisplay; } // Removido
-    // public void setNomeResponsavelDisplay(String nomeResponsavelDisplay) { this.nomeResponsavelDisplay = nomeResponsavelDisplay; } // Removido
+
+    public LocalDateTime getDataEncaminhamento() { return dataEncaminhamento; }
+    public void setDataEncaminhamento(LocalDateTime dataEncaminhamento) { this.dataEncaminhamento = dataEncaminhamento; }
+
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }

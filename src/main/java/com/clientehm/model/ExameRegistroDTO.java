@@ -10,7 +10,10 @@ public class ExameRegistroDTO {
     private String observacoes;
     private Long medicoResponsavelExameId;
     private String medicoResponsavelExameNome;
-    // private String nomeResponsavelDisplay; // Removido
+
+    // Novo campo
+    private LocalDateTime dataExame;
+
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -28,8 +31,10 @@ public class ExameRegistroDTO {
     public void setMedicoResponsavelExameId(Long medicoResponsavelExameId) { this.medicoResponsavelExameId = medicoResponsavelExameId; }
     public String getMedicoResponsavelExameNome() { return medicoResponsavelExameNome; }
     public void setMedicoResponsavelExameNome(String medicoResponsavelExameNome) { this.medicoResponsavelExameNome = medicoResponsavelExameNome; }
-    // public String getNomeResponsavelDisplay() { return nomeResponsavelDisplay; } // Removido
-    // public void setNomeResponsavelDisplay(String nomeResponsavelDisplay) { this.nomeResponsavelDisplay = nomeResponsavelDisplay; } // Removido
+
+    public LocalDateTime getDataExame() { return dataExame; }
+    public void setDataExame(LocalDateTime dataExame) { this.dataExame = dataExame; }
+
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }

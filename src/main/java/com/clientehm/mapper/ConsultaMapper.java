@@ -34,6 +34,7 @@ public class ConsultaMapper {
         entity.setCondutaPlanoTerapeutico(dto.getCondutaPlanoTerapeutico());
         entity.setDetalhesConsulta(dto.getDetalhesConsulta());
         entity.setObservacoesConsulta(dto.getObservacoesConsulta());
+        entity.setDataConsulta(dto.getDataConsulta()); // Mapear o novo campo
 
         if (dto.getSinaisVitais() != null) {
             SinaisVitaisEntity sinaisVitaisEntity = sinaisVitaisMapper.toEntity(dto.getSinaisVitais());
@@ -47,6 +48,7 @@ public class ConsultaMapper {
 
         ConsultaDTO dto = modelMapper.map(entity, ConsultaDTO.class);
         dto.setCreatedAt(entity.getCreatedAt());
+        dto.setDataConsulta(entity.getDataConsulta()); // Mapear o novo campo
 
         if (entity.getSinaisVitais() != null) {
             dto.setSinaisVitais(sinaisVitaisMapper.toDTO(entity.getSinaisVitais()));
@@ -62,10 +64,6 @@ public class ConsultaMapper {
             dto.setTipoResponsavel("ADMINISTRADOR");
             dto.setResponsavelId(entity.getResponsavelAdmin().getId());
             dto.setResponsavelNomeCompleto(entity.getResponsavelAdmin().getNome());
-        } else {
-            // Se nenhum responsável for encontrado, pode-se decidir como lidar com isso.
-            // Por exemplo, atribuir um valor padrão ou deixar nulo.
-            // dto.setResponsavelNomeCompleto(entity.getNomeResponsavelDisplay()); // Removido
         }
 
         return dto;
@@ -76,6 +74,7 @@ public class ConsultaMapper {
 
         if (StringUtils.hasText(dto.getMotivoConsulta())) entity.setMotivoConsulta(dto.getMotivoConsulta());
         if (StringUtils.hasText(dto.getQueixasPrincipais())) entity.setQueixasPrincipais(dto.getQueixasPrincipais());
+        if (dto.getDataConsulta() != null) entity.setDataConsulta(dto.getDataConsulta()); // Atualizar o novo campo
 
         if (dto.getSinaisVitais() != null) {
             SinaisVitaisEntity sinaisVitaisEntity = entity.getSinaisVitais();
@@ -88,7 +87,6 @@ public class ConsultaMapper {
             // Lógica para lidar com a remoção de sinais vitais se o DTO for nulo e a entidade tiver
         }
 
-
         if (dto.getExameFisico() != null) entity.setExameFisico(StringUtils.hasText(dto.getExameFisico()) ? dto.getExameFisico().trim() : null);
         if (dto.getHipoteseDiagnostica() != null) entity.setHipoteseDiagnostica(StringUtils.hasText(dto.getHipoteseDiagnostica()) ? dto.getHipoteseDiagnostica().trim() : null);
         if (dto.getCondutaPlanoTerapeutico() != null) entity.setCondutaPlanoTerapeutico(StringUtils.hasText(dto.getCondutaPlanoTerapeutico()) ? dto.getCondutaPlanoTerapeutico().trim() : null);
@@ -98,11 +96,9 @@ public class ConsultaMapper {
         if (medicoExecutor != null) {
             entity.setResponsavelMedico(medicoExecutor);
             entity.setResponsavelAdmin(null);
-            // entity.setNomeResponsavelDisplay(medicoExecutor.getNomeCompleto()); // Removido
         } else if (adminLogado != null) {
             entity.setResponsavelMedico(null);
             entity.setResponsavelAdmin(adminLogado);
-            // entity.setNomeResponsavelDisplay(adminLogado.getNome()); // Removido
         }
     }
 }
