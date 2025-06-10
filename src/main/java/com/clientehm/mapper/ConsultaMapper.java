@@ -50,6 +50,11 @@ public class ConsultaMapper {
         dto.setCreatedAt(entity.getCreatedAt());
         dto.setDataConsulta(entity.getDataConsulta());
 
+        // Adicione este mapeamento para o prontuarioId
+        if (entity.getProntuario() != null) {
+            dto.setProntuarioId(entity.getProntuario().getId());
+        }
+
         if (entity.getSinaisVitais() != null) {
             dto.setSinaisVitais(sinaisVitaisMapper.toDTO(entity.getSinaisVitais()));
         }
