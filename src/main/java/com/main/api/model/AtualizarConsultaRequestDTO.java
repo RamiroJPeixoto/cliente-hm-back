@@ -33,7 +33,7 @@ public class AtualizarConsultaRequestDTO {
     @Size(max = 5000, message = "Observações da consulta não podem exceder 5000 caracteres")
     private String observacoesConsulta;
 
-    @NotNull(message = "ID do médico executor é obrigatório") // TORNADO OBRIGATÓRIO
+    @NotNull(message = "ID do médico executor é obrigatório")
     private Long medicoExecutorId;
 
     public LocalDateTime getDataConsulta() { return dataConsulta; }

@@ -105,11 +105,11 @@ public class MedicoEntity {
         this.rqe = rqe;
     }
 
-    public LocalDateTime getDeletedAt() { // Atualizado para getDeletedAt
+    public LocalDateTime getDeletedAt() {
         return deletedAt;
     }
 
-    public void setDeletedAt(LocalDateTime deletedAt) { // Atualizado para setDeletedAt
+    public void setDeletedAt(LocalDateTime deletedAt) {
         this.deletedAt = deletedAt;
     }
 

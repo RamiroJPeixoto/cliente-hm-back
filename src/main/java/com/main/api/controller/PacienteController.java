@@ -4,6 +4,7 @@ import com.main.api.model.PacienteCreateDTO;
 import com.main.api.model.PacienteDTO;
 import com.main.api.model.PacienteUpdateDTO;
 import com.main.domain.service.PacienteService;
+import com.main.util.ApiResponseUtil;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,7 +14,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -23,20 +23,13 @@ public class PacienteController {
     @Autowired
     private PacienteService pacienteService;
 
-    private ResponseEntity<Map<String, Object>> createSuccessResponse(Object data, String message, HttpStatus status) {
-        Map<String, Object> body = new HashMap<>();
-        body.put("mensagem", message);
-        body.put("codigo", status.value());
-        if (data != null) {
-            body.put("dados", data);
-        }
-        return ResponseEntity.status(status).body(body);
-    }
+    @Autowired
+    private ApiResponseUtil apiResponseUtil;
 
     @PostMapping
     public ResponseEntity<?> criarPaciente(@Valid @RequestBody PacienteCreateDTO pacienteCreateDTO) {
         PacienteDTO pacienteCriado = pacienteService.criarPaciente(pacienteCreateDTO);
-        return createSuccessResponse(pacienteCriado, "Paciente criado com sucesso.", HttpStatus.CREATED);
+        return apiResponseUtil.createSuccessResponse(HttpStatus.CREATED, "Paciente criado com sucesso.", pacienteCriado);
     }
 
     @GetMapping
@@ -61,18 +54,18 @@ public class PacienteController {
     @GetMapping("/{id}")
     public ResponseEntity<?> buscarPacientePorId(@PathVariable Long id) {
         PacienteDTO pacienteDTO = pacienteService.buscarPacientePorId(id);
-        return createSuccessResponse(pacienteDTO, "Paciente encontrado.", HttpStatus.OK);
+        return apiResponseUtil.createSuccessResponse(HttpStatus.OK, "Paciente encontrado.", pacienteDTO);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> atualizarPaciente(@PathVariable Long id, @Valid @RequestBody PacienteUpdateDTO pacienteUpdateDTO) {
         PacienteDTO pacienteAtualizado = pacienteService.atualizarPaciente(id, pacienteUpdateDTO);
-        return createSuccessResponse(pacienteAtualizado, "Paciente atualizado com sucesso.", HttpStatus.OK);
+        return apiResponseUtil.createSuccessResponse(HttpStatus.OK, "Paciente atualizado com sucesso.", pacienteAtualizado);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Map<String, Object>> deletarPaciente(@PathVariable Long id) {
         pacienteService.deletarPaciente(id);
-        return createSuccessResponse(null, "Paciente deletado com sucesso.", HttpStatus.NO_CONTENT);
+        return apiResponseUtil.createSuccessResponse(HttpStatus.NO_CONTENT, "Paciente deletado com sucesso.", null);
     }
 }

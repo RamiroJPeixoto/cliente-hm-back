@@ -9,6 +9,7 @@ import com.main.api.model.AdministradorDadosDTO;
 import com.main.domain.service.AdministradorService;
 import com.main.mapper.AdministradorMapper;
 import com.main.domain.entity.AdministradorEntity;
+import com.main.util.ApiResponseUtil;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,15 +29,8 @@ public class AdministradorController {
     @Autowired
     private AdministradorMapper administradorMapper;
 
-    private ResponseEntity<Map<String, Object>> createSuccessResponse(HttpStatus status, String message, Object data) {
-        Map<String, Object> body = new HashMap<>();
-        body.put("mensagem", message);
-        body.put("codigo", status.value());
-        if (data != null) {
-            body.put("dados", data);
-        }
-        return ResponseEntity.status(status).body(body);
-    }
+    @Autowired
+    private ApiResponseUtil apiResponseUtil;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody AdministradorLoginDTO loginDTO) {
@@ -47,19 +41,19 @@ public class AdministradorController {
     @PostMapping("/registrar")
     public ResponseEntity<?> registrar(@Valid @RequestBody AdministradorRegistroDTO registroDTO) {
         AdministradorDadosDTO adminDTO = administradorService.register(registroDTO);
-        return createSuccessResponse(HttpStatus.CREATED, "Administrador registrado com sucesso", adminDTO);
+        return apiResponseUtil.createSuccessResponse(HttpStatus.CREATED, "Administrador registrado com sucesso", adminDTO);
     }
 
     @PostMapping("/verificar-palavra-chave")
     public ResponseEntity<?> verificarPalavraChave(@Valid @RequestBody VerificarPalavraChaveDTO verificarDTO) {
         administradorService.verifyKeyword(verificarDTO);
-        return createSuccessResponse(HttpStatus.OK, "Palavra-chave correta.", null);
+        return apiResponseUtil.createSuccessResponse(HttpStatus.OK, "Palavra-chave correta.", null);
     }
 
     @PutMapping("/redefinir-senha")
     public ResponseEntity<?> redefinirSenha(@Valid @RequestBody RedefinirSenhaDTO redefinirDTO) {
         administradorService.resetPassword(redefinirDTO);
-        return createSuccessResponse(HttpStatus.OK, "Senha alterada com sucesso.", null);
+        return apiResponseUtil.createSuccessResponse(HttpStatus.OK, "Senha alterada com sucesso.", null);
     }
 
     @GetMapping("/me")

@@ -85,7 +85,7 @@ public class AdministradorService {
     }
 
     @Transactional
-    public AdministradorDadosDTO resetPassword(RedefinirSenhaDTO redefinirDTO) { // Alterado para retornar AdministradorDadosDTO
+    public AdministradorDadosDTO resetPassword(RedefinirSenhaDTO redefinirDTO) {
         AdministradorEntity admin = administradorRepository.findByEmail(redefinirDTO.getEmail())
                 .orElseThrow(() -> new AdminNotFoundException("Administrador não encontrado"));
 
@@ -95,11 +95,11 @@ public class AdministradorService {
 
         admin.setSenha(passwordEncoder.encode(redefinirDTO.getNovaSenha()));
         AdministradorEntity adminAtualizado = administradorRepository.save(admin);
-        return administradorMapper.toDadosDTO(adminAtualizado); // Usar o mapper
+        return administradorMapper.toDadosDTO(adminAtualizado);
     }
 
     @Transactional(readOnly = true)
-    public AdministradorEntity findByEmail(String email) { // Método auxiliar se precisar da entidade
+    public AdministradorEntity findByEmail(String email) {
         return administradorRepository.findByEmail(email)
                 .orElseThrow(() -> new AdminNotFoundException("Administrador não encontrado com email: " + email));
     }

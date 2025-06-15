@@ -67,7 +67,7 @@ public class ConsultaMapper {
         return dto;
     }
 
-    public void updateEntityFromDTO(AtualizarConsultaRequestDTO dto, ConsultaRegistroEntity entity, MedicoEntity medicoExecutor, AdministradorEntity adminLogado) { // Manter adminLogado para outros usos se houver, mas não para a atribuição de responsável da consulta.
+    public void updateEntityFromDTO(AtualizarConsultaRequestDTO dto, ConsultaRegistroEntity entity, MedicoEntity medicoExecutor, AdministradorEntity adminLogado) {
         if (dto == null || entity == null) return;
 
         if (StringUtils.hasText(dto.getMotivoConsulta())) entity.setMotivoConsulta(dto.getMotivoConsulta());

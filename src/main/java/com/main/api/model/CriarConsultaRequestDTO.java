@@ -36,8 +36,8 @@ public class CriarConsultaRequestDTO {
     @Size(max = 5000, message = "Observações da consulta não podem exceder 5000 caracteres")
     private String observacoesConsulta;
 
-    @NotNull(message = "ID do médico executor é obrigatório") // TORNADO OBRIGATÓRIO
-    private Long medicoExecutorId; // Mover para o DTO principal se for sempre obrigatório
+    @NotNull(message = "ID do médico executor é obrigatório")
+    private Long medicoExecutorId;
 
     public LocalDateTime getDataConsulta() { return dataConsulta; }
     public void setDataConsulta(LocalDateTime dataConsulta) { this.dataConsulta = dataConsulta; }
@@ -65,6 +65,6 @@ public class CriarConsultaRequestDTO {
     public void setDetalhesConsulta(String detalhesConsulta) { this.detalhesConsulta = detalhesConsulta; }
     public String getObservacoesConsulta() { return observacoesConsulta; }
     public void setObservacoesConsulta(String observacoesConsulta) { this.observacoesConsulta = observacoesConsulta; }
-    public Long getMedicoExecutorId() { return medicoExecutorId; } // Getter para o campo agora obrigatório
-    public void setMedicoExecutorId(Long medicoExecutorId) { this.medicoExecutorId = medicoExecutorId; } // Setter para o campo agora obrigatório
+    public Long getMedicoExecutorId() { return medicoExecutorId; }
+    public void setMedicoExecutorId(Long medicoExecutorId) { this.medicoExecutorId = medicoExecutorId; }
 }

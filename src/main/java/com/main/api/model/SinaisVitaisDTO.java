@@ -16,7 +16,7 @@ public class SinaisVitaisDTO {
     @Size(max = 10, message = "Saturação não pode exceder 10 caracteres")
     private String saturacao;
 
-    @Size(max = 10, message = "HGT não pode exceder 10 caracteres") // Novo campo
+    @Size(max = 10, message = "HGT não pode exceder 10 caracteres")
     private String hgt;
 
     public String getPressaoArterial() {

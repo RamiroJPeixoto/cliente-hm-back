@@ -16,7 +16,7 @@ public class MedicoDTO {
     public MedicoDTO() {
     }
 
-    public MedicoDTO(Long id, String nomeCompleto, String crm, String especialidade, String resumoEspecialidade, String rqe, LocalDateTime deletedAt, LocalDateTime createdAt, LocalDateTime updatedAt) { // Construtor atualizado
+    public MedicoDTO(Long id, String nomeCompleto, String crm, String especialidade, String resumoEspecialidade, String rqe, LocalDateTime deletedAt, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.nomeCompleto = nomeCompleto;
         this.crm = crm;
@@ -76,11 +76,11 @@ public class MedicoDTO {
         this.rqe = rqe;
     }
 
-    public LocalDateTime getDeletedAt() { // Atualizado
+    public LocalDateTime getDeletedAt() {
         return deletedAt;
     }
 
-    public void setDeletedAt(LocalDateTime deletedAt) { // Atualizado
+    public void setDeletedAt(LocalDateTime deletedAt) {
         this.deletedAt = deletedAt;
     }
 

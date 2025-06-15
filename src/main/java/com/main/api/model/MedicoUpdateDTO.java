@@ -60,11 +60,11 @@ public class MedicoUpdateDTO {
         this.rqe = rqe;
     }
 
-    public LocalDateTime getDeletedAt() { // Renomeado de getExcludedAt
+    public LocalDateTime getDeletedAt() {
         return deletedAt;
     }
 
-    public void setDeletedAt(LocalDateTime deletedAt) { // Renomeado de setExcludedAt
+    public void setDeletedAt(LocalDateTime deletedAt) {
         this.deletedAt = deletedAt;
     }
 }

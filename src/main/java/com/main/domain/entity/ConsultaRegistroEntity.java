@@ -37,7 +37,7 @@ public class ConsultaRegistroEntity {
     private String observacoesConsulta;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "responsavel_medico_id") // Torna-se o único responsável
+    @JoinColumn(name = "responsavel_medico_id")
     private MedicoEntity responsavelMedico;
 
     @OneToOne(mappedBy = "consulta", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)

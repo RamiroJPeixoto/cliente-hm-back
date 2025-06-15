@@ -59,7 +59,7 @@ public class ConsultaDTO {
     public String getResponsavelNomeCompleto() { return responsavelNomeCompleto; }
     public void setResponsavelNomeCompleto(String responsavelNomeCompleto) { this.responsavelNomeCompleto = responsavelNomeCompleto; }
     public String getResponsavelEspecialidade() { return responsavelEspecialidade; }
-    public void setResponsavelEspecialidade(String responsavelEspecialidade) { this.responsavelEspecialidade = responsavelEspecialidade; } // Linha corrigida
+    public void setResponsavelEspecialidade(String responsavelEspecialidade) { this.responsavelEspecialidade = responsavelEspecialidade; }
     public String getResponsavelCRM() { return responsavelCRM; }
     public void setResponsavelCRM(String responsavelCRM) { this.responsavelCRM = responsavelCRM; }
     public LocalDateTime getDataConsulta() { return dataConsulta; }

@@ -23,7 +23,7 @@ public class JwtUtil {
     }
 
     public String generateToken(String username) {
-        long expMillis = System.currentTimeMillis() + 3600000; // 1 hora
+        long expMillis = System.currentTimeMillis() + 3600000;
         return Jwts.builder()
                 .setSubject(username)
                 .setIssuedAt(new Date())

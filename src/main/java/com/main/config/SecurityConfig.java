@@ -41,8 +41,6 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/administradores/registrar").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/administradores/verificar-palavra-chave").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/api/administradores/redefinir-senha").permitAll()
-
-                        // Prontuarios endpoints - assumindo que também precisam de autenticação
                         .requestMatchers("/api/prontuarios/**").authenticated()
                         .requestMatchers("/api/medicos/**").authenticated()
                         .requestMatchers("/api/pacientes/**").authenticated()
