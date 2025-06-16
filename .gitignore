@@ -1,14 +1,21 @@
-# Ignorar diretório de build do Maven
+# Diretório de build do Maven e artefatos
 # O diretório 'target/' é onde o Maven coloca todos os arquivos gerados pelo build,
-# como classes compiladas, arquivos JAR/WAR, etc.
+# como classes compiladas, arquivos JAR/WAR, resultados de testes, etc.
 target/
-.mvn/wrapper/maven-wrapper.jar # Ignora o jar do wrapper Maven, que pode ser grande
+# Ignora o JAR do wrapper Maven, que pode ser grande e geralmente já está no projeto.
+.mvn/wrapper/maven-wrapper.jar
 
-# Ignorar arquivos de log
+# Caso, por algum erro de configuração ou bug, uma pasta literal com a variável seja criada
+# Isso é incomum, mas se aconteceu, essa linha garante que não seja versionado.
+${project.build.directory}/
+
+# Arquivos de log
+# Ignora todos os arquivos com extensão .log
 *.log
+# Ignora qualquer diretório chamado 'logs' e seu conteúdo
 logs/
 
-# Ignorar configurações de IDEs
+# Arquivos de configuração e pastas de IDEs
 # IntelliJ IDEA
 .idea/
 *.iml
@@ -26,35 +33,56 @@ logs/
 # VS Code
 .vscode/
 
-# Ignorar arquivos específicos do sistema operacional
-.DS_Store # macOS
-Thumbs.db # Windows
-ehthumbs.db # Windows
-Desktop.ini # Windows
+# Arquivos específicos do sistema operacional
+# macOS
+.DS_Store
 
-# Ignorar dependências do Gradle (se por acaso você misturasse, mas geralmente é Maven OU Gradle)
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Ignorar dependências do Gradle (se por acaso o projeto fosse misto ou migrado)
+# Para projetos Maven puros, estas linhas não são estritamente necessárias,
+# mas não causam mal.
 .gradle/
 build/ # O diretório de build padrão do Gradle
 
-# Ignorar arquivos gerados para Docker, se houver
-# .dockerignore pode ser usado para isso, mas se quiser manter centralizado
-# volumes/
-# tmp/
-
 # Outros arquivos temporários ou gerados
+# Ignora arquivos JAR, WAR e EAR gerados
 *.jar
 *.war
 *.ear
+
+# Arquivos compactados (que geralmente são artefatos ou dependências)
 *.zip
 *.tar.gz
 *.rar
-*.class # Geralmente coberto por 'target/', mas pode ser útil para arquivos soltos
-hs_err_pid*.log # Logs de erro da JVM
 
-# Configurações sensíveis (opcional, dependendo do uso)
-# Se você tiver arquivos de configuração com senhas ou chaves de API,
-# que são específicos do seu ambiente local e não devem ser versionados.
-# Exemplo:
+# Arquivos de classe compilados (geralmente já cobertos por 'target/')
+# Útil caso algum .class seja gerado fora do diretório padrão.
+*.class
+
+# Logs de erro da JVM
+hs_err_pid*.log
+
+# Arquivos de cache e temporários de ambiente
+# Ignora a pasta de cache do Maven
+.m2/repository/
+# Ignora pastas temporárias ou de cache genéricas
+tmp/
+temp/
+cache/
+
+# Configurações sensíveis e específicas do ambiente local
+# CUIDADO: Use estas linhas com precaução!
+# Se você tiver arquivos de configuração com senhas, chaves de API, etc.,
+# que são específicos do seu ambiente local e NÃO DEVEM ser versionados.
+#
+# Exemplos (descomente APENAS se você realmente quer ignorá-los e sabe o porquê):
 # src/main/resources/application-dev.properties
-# application.properties # CUIDADO: Se você tem valores default que DEVEM ser versionados, não ignore este.
-#                         # É mais comum usar variáveis de ambiente ou Vault para segredos.
+# src/main/resources/application-prod.properties
+# application.properties # CUIDADO: Se seu application.properties contém valores default que DEVEM ser versionados, não ignore este.
+#                          # Para segredos, é mais comum usar variáveis de ambiente, Spring Cloud Config Server,
+#                          # ou Vault, e não versionar o arquivo.
+# .env # Para arquivos de variáveis de ambiente
