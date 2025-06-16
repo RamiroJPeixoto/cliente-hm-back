@@ -4,7 +4,7 @@ Este repositório contém o código-fonte do backend da aplicação Clínica HM,
 
 ## 🔍 Visão Geral
 
-O backend da HM Psicoterapia é o responsável pela lógica de negócio, persistência de dados e por fornecer a API RESTful consumida pelo frontend. Ele gerencia as informações de pacientes, médicos e prontuários de forma segura e transacional.
+O backend é o responsável pela lógica de negócio, persistência de dados e por fornecer a API RESTful consumida pelo frontend. Ele gerencia as informações de pacientes, médicos e prontuários de forma segura e transacional.
 
 ## 🛠️ Tecnologias
 
