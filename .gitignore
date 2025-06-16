@@ -1,0 +1,60 @@
+# Ignorar diretório de build do Maven
+# O diretório 'target/' é onde o Maven coloca todos os arquivos gerados pelo build,
+# como classes compiladas, arquivos JAR/WAR, etc.
+target/
+.mvn/wrapper/maven-wrapper.jar # Ignora o jar do wrapper Maven, que pode ser grande
+
+# Ignorar arquivos de log
+*.log
+logs/
+
+# Ignorar configurações de IDEs
+# IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Eclipse
+.project
+.classpath
+.settings/
+.apt_generated/
+.factorypath
+.metadata/
+
+# VS Code
+.vscode/
+
+# Ignorar arquivos específicos do sistema operacional
+.DS_Store # macOS
+Thumbs.db # Windows
+ehthumbs.db # Windows
+Desktop.ini # Windows
+
+# Ignorar dependências do Gradle (se por acaso você misturasse, mas geralmente é Maven OU Gradle)
+.gradle/
+build/ # O diretório de build padrão do Gradle
+
+# Ignorar arquivos gerados para Docker, se houver
+# .dockerignore pode ser usado para isso, mas se quiser manter centralizado
+# volumes/
+# tmp/
+
+# Outros arquivos temporários ou gerados
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+*.class # Geralmente coberto por 'target/', mas pode ser útil para arquivos soltos
+hs_err_pid*.log # Logs de erro da JVM
+
+# Configurações sensíveis (opcional, dependendo do uso)
+# Se você tiver arquivos de configuração com senhas ou chaves de API,
+# que são específicos do seu ambiente local e não devem ser versionados.
+# Exemplo:
+# src/main/resources/application-dev.properties
+# application.properties # CUIDADO: Se você tem valores default que DEVEM ser versionados, não ignore este.
+#                         # É mais comum usar variáveis de ambiente ou Vault para segredos.
