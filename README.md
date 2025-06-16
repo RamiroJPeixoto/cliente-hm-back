@@ -18,39 +18,6 @@ Este repositório contém o código-fonte do backend da aplicação Clínica HM,
 
 ## 🔍 Visão Geral
 
-O backend da Clínica HM é o responsável pela lógica de negócio, persistência de dados e por fornecer a API RESTful consumida pelo frontend. Ele gerencia as informações de pacientes, médicos e prontuários de forma segura e transacional.
-
-## 🏗️ Arquitetura
-
-O backend segue uma arquitetura em camadas para promover a separação de responsabilidades (SoC).
-
-Bash
-
-# HM Psicoterapia - Backend
-
-Este repositório contém o código-fonte do backend da aplicação HM Psicoterapia, desenvolvida com Java e Spring Boot.
-
----
-
-📋 **Índice**
-
-* [🔍 Visão Geral](#-visão-geral)
-* [🏗️ Arquitetura](#️-arquitetura)
-* [🛠️ Tecnologias](#️-tecnologias)
-* [✨ Funcionalidades](#-funcionalidades)
-* [🚀 Instalação](#-instalação)
-* [⚙️ Configuração](#️-configuração)
-* [🖥️ Uso](#️-uso)
-* [🐳 Docker](#-docker)
-* [📡 API](#-api)
-* [📂 Estrutura do Projeto](#-estrutura-do-projeto)
-* [📄 Licença](#-licença)
-* [📞 Contato](#-contato)
-
----
-
-## 🔍 Visão Geral
-
 O backend da HM Psicoterapia é o responsável pela lógica de negócio, persistência de dados e por fornecer a API RESTful consumida pelo frontend. Ele gerencia as informações de pacientes, médicos e prontuários de forma segura e transacional.
 
 ## 🏗️ Arquitetura
